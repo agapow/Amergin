@@ -1,0 +1,26 @@
+Metadata-Version: 1.0
+Name: relais.amergin
+Version: 0.1dev
+Summary: A Django application for curating a Relais repository.
+Home-page: UNKNOWN
+Author: Paul-Michael Agapow
+Author-email: agapow@bbsrc.ac.uk
+License: BSD
+Description: Introduction
+        ============
+        
+        
+        
+        Changelog
+        =========
+        
+        0.1 - Unreleased
+        ----------------
+        
+        * Initial release
+        
+        
+Keywords: science django web epi-informatics
+Platform: UNKNOWN
+Classifier: Programming Language :: Python
+Classifier: Topic :: Software Development :: Libraries :: Python Modules

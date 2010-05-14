@@ -1,0 +1,123 @@
+{% extends "relais.amergin/baselayout.html" %}
+{% load webdesign %}
+
+{% block header_extra %}
+	<style>
+		.welcome_table {
+			width:80%;
+			margin-left:10%;
+			margin-right:10%;
+			table-layout: fixed;
+			text-align: center;
+			border-collapse:collapse;
+			border-spacing: 20px;
+		}
+		
+		.welcome_table tr.header {
+			vertical-align: bottom;
+		}
+		
+		.welcome_table tr.description {
+			vertical-align: top;
+		}
+		
+		.welcome_table td {
+		}
+				
+		.foo {
+			float:left;
+			width: 200px;
+			height: 200px;
+			background-color: red;
+			margin: 10px;
+		}
+		
+		ul.welcome {
+			list-style-type: none;
+		}
+	</style>
+{% endblock %}
+
+{% block dojango_page_title %}Analyse and report sequence{% endblock %}
+
+{% block banner_title %}Analyse and report sequence{% endblock %}
+
+{% block center_content %}
+
+<div id="mainTabContainer" dojoType="dijit.layout.TabContainer" 
+        style="width:90%;height:90%">
+      <div id="LittleRed" dojoType="dijit.layout.ContentPane" title="1. Introduction Red Cap">
+      Once upon a time there was a dear little girl who was loved by 
+      every one who looked at her, but most of all by her grandmother, 
+      and there was nothing that she would not have given to the child. 
+      </div>
+      <div id="HanselGretel" dojoType="dijit.layout.ContentPane" 
+           title="2. Upload sequence" closable="true" selected="true" style="padding: 20px">
+      <P>Upload a sequence for analysis. Data will be cleaned up
+				and reformated into a canonical form before use. The
+				allowed symbols are the IUPAC codes.
+				Question marks are translated to ambiguous characters ('N'). Gaps
+				are represented by '-'. Any whitespace, blank spaces etc.
+				are stripped. <P>
+					
+		<textarea class="bioseq" style="width: 100%" rows=10></textarea>
+		
+		<P>A sequence file can be uploaded instead. Formats understood (and the
+		corresponding file extension) are genbank (.genbank, .gb), fasta (.fasta, .fas), phylip (.phy, .phylip) and stockholm (.sth).</P>
+		
+		<input type="file" name="datafile" size="80">
+		
+		<P>Normally sequence type is determined from content, but this can be overridden below:
+			
+			<SELECT NAME="mylist">
+			<OPTION VALUE="m1">Determine from content
+			<OPTION VALUE="m2">Nucleotide
+			<OPTION VALUE="m3">Amino acid
+			</SELECT>
+		
+		
+		
+      </div>
+		      <div id="ddd" dojoType="dijit.layout.ContentPane" 
+		             title="3. Edit sequence">
+		      There was once upon a time a hermit who lived in a forest at the foot 
+		</div> 
+		      <div id="qq" dojoType="dijit.layout.ContentPane" 
+		             title="4. Comparision">
+		      There was once upon a time a hermit who lived in a forest at the foot 
+		</div>
+		      <div id="hhhh" dojoType="dijit.layout.ContentPane" 
+		             title="4. Build phylogeny">
+		      There was once upon a time a hermit who lived in a forest at the foot 
+		</div>
+		      <div id="kkkll" dojoType="dijit.layout.ContentPane" 
+		             title="6. Build report">
+		      Ther
+		</div><div id="GreendddTwigs" dojoType="dijit.layout.ContentPane" 
+				             title="7. Postflight">
+				      Ther
+				</div>
+
+</div>
+
+{% endblock %}
+
+{% block other_panes %}
+	{% block footer_pane %}
+	<div dojoType="dijit.layout.ContentPane" region="bottom"
+			style="height: 10%;">
+		{% block footer_content %}
+			<div class="centervert">
+				<div class="centerhoriz discrete" style="width: 80%">
+					Return to:
+					<A HREF="">Top level</A> |
+					<A HREF="">Choose repository</A> |
+					<A HREF="">Repository</A> |
+					<A HREF="">Use tools </A>
+				</div>
+			</div>
+		{% endblock %}
+	</div>
+	{% endblock %}
+{% endblock %}
+

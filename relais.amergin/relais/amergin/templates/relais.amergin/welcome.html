@@ -1,0 +1,29 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block header_title %}Amergin: a curation interface for Relais{% endblock %}
+	
+{% block title %}Welcome to Amergin{% endblock %}
+	
+{% block description %}Search, view, download or edit data below.{% endblock %}
+
+{% block content %}
+
+{{ SITE_URL }}
+
+<div id="leftblock">
+	{% include "relais.amergin/controllerlist.html" %}
+</div>
+
+<div id="rightblock">
+	{% include "relais.amergin/toollist.html" %}
+</div>
+
+
+
+<div class="bottombox">Tracking {{ isolate_cnt }} isolates, {{ bioseq_cnt }}
+biosequences and {{ bioseqcollection_cnt }} biosequence collections.</div>
+
+{% endblock %}
+
+	
+

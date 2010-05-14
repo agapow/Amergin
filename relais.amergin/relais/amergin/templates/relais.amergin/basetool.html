@@ -1,0 +1,23 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block header_title %}Amergin: {{ title }}{% endblock %}
+	
+{% block title %}{{ title }}{% endblock %}
+	
+{% block description %}{{ description }}{% endblock %}
+
+{% block content %}
+
+<form method="post" action="/submit/">
+<table>
+{{ form }}
+<tr>
+  <td><input type="submit" value="Submit" /></td>
+</tr>
+</table>
+</form>
+
+{% endblock %}
+
+	
+

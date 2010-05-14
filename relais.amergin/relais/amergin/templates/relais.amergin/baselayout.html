@@ -1,0 +1,38 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block dojango_content %}
+<div dojoType="dijit.layout.BorderContainer" class="container"
+		gutters="false">
+		
+	<div dojoType="dijit.layout.ContentPane" region="top"
+			style="height: 59px;">
+		<div class="banner">
+			{% block banner_title %}BANNER TITLE{% endblock %}
+		</div>
+	</div>
+	
+	{% block center_pane %}
+	<div dojoType="dijit.layout.ContentPane" region="center">
+		{% block center_content %}
+		<div>
+			THIS IS THE CENTER
+		</div>
+		{% endblock %}
+	</div>
+	{% endblock %}
+
+	{% block other_panes %}
+		{% block footer_pane %}
+		<div dojoType="dijit.layout.ContentPane" region="bottom"
+				style="height: 30%;">
+			{% block footer_content %}
+			<div>
+				THIS IS THE FOOTER
+			</div>
+			{% endblock %}
+		</div>
+		{% endblock %}
+	{% endblock %}
+	
+</div>
+{% endblock %}
