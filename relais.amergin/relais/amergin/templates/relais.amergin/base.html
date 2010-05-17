@@ -8,67 +8,65 @@
 	 
 	<title>{% block header_title %}HEAD TITLE{% endblock %}</title>
 	
-	<style type="text/css">
-        @import "/media/relais.amergin/dojo/dijit/themes/tundra/tundra.css";
-        @import "/media/relais.amergin/dojo/dojo/resources/dojo.css"
-    </style>
-    <script type="text/javascript" src="/media/relais.amergin/dojo/dojo/dojo.js" 
-      djConfig="parseOnLoad: true"></script>
+	{% block header_incl %}
+		<style type="text/css">
+			@import "/media/relais.amergin/extjs/resources/css/ext-all.css";
+		</style>
+		<script type="text/javascript"
+		 src="/media/relais.amergin/extjs/adapter/ext/ext-base.js"></script>
+		<script type="text/javascript"
+		 src="/media/relais.amergin/extjs/ext-all.js"></script>
+	{% endblock %}
 
-<script type="text/javascript">
-    dojo.require("dijit.layout.BorderContainer");
-    dojo.require("dijit.layout.ContentPane");
-</script>
-<style type="text/css">
-    html, body { width: 100%; height: 100%; margin: 0; }
-</style>
+	{% block header_script %}
+	{% endblock %}
 
-	{% block header_extra %}{% endblock %}
+	{% block header_extra %}
+	{% endblock %}
 
-</head>
+</head class="{% block body_class %}base{% endblock %}">
 
-<body class="tundra">
+<body>
 
-
-
-{% block mainbody %}
-
-<div dojoType="dijit.layout.BorderContainer" style="width: 100%; height: 100%">
+{% block body_content %}
 	
-    <div dojoType="dijit.layout.ContentPane" region="top">
-        <H1>{% block title %}PAGE TITLE{% endblock %}</H1>
-    </div>
-	 
-    <div dojoType="dijit.layout.ContentPane" region="leading">
-        Leading pane
-    </div>
-	 
-    <div dojoType="dijit.layout.ContentPane" region="center">
-      <P class="description">
-		{% block description %}DESCRIPTION{% endblock %}
-		</P>
+	<div id="north">
+		{% block body_north %}
+			<H1>{% block body_title %}PAGE TITLE{% endblock %}</H1>
+			<P class="description">
+				{% block description %}DESCRIPTION{% endblock %}
+			</P>
+		{% endblock %}
+	</div>
+	
+	{% block body_main %}
+		<div id="left">
+			{% block body_left %}
+				left pane
+			{% endblock %}
+		</div>
+		 
+		<div id="center">
+			{% block body_center %}
+				center pane
+			{% endblock %}
+		</div>
+		 
+		<div id="right">
+			{% block body_right %}
+				right pane
+			{% endblock %}
+		</div>
+	{% endblock %}
 		
-		<DIV id="body_content" class="center">
-		{% block content %}PAGE BODY{% endblock %}
-		</DIV>
-		
-    </div>
-	 
-    <div dojoType="dijit.layout.ContentPane" region="trailing">
-        Trailing pane
-    </div>
-	 
-    <div dojoType="dijit.layout.ContentPane" region="bottom">
-      {% block footer %}
-		This is an Amergin 0.3 installation, based upon the
-		Django web developmenta stack (v1.1) and the Relais epi-informatics
-		suite (v0.5.6). Direct any problems to the system administrator
-		<A HREF="mailto:btv@iah.bbsrc.ac.uk">btv@iah.bbsrc.ac.uk</A>.
-		{% endblock %}	
-    </div>
-
-
-</DIV>
+	<div id="south">
+		{% block body_south %}
+			This is an Amergin 0.3 installation, based upon the Django web
+			developmenta stack (v1.1) and the Relais epi-informatics
+			suite (v0.5.6). Direct any problems to the system administrator
+			<A HREF="mailto:btv@iah.bbsrc.ac.uk">btv@iah.bbsrc.ac.uk</A>.
+		{% endblock %}
+	</div>
 
 {% endblock %}
 

@@ -36,6 +36,10 @@ def welcome (request):
 		'controller_list': controller_registry,
 		'tool_list': tool_registry,
 	}
+	return render_to_response ('relais.amergin/welcome_ext.html',
+		info_dict,
+		context_instance = RequestContext(request)
+	)
 	return render_to_response ('relais.amergin/welcome.html',
 		info_dict,
 		context_instance = RequestContext(request)
