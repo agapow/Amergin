@@ -1,0 +1,16 @@
+
+{% if object|title %}
+	<p class="field"><em>Title:</em> {{object|title}}</p>
+{% endif %}
+
+{% if object|source %}
+	<p class="field"><em>Source:</em> {{object|source}}</p>
+{% endif %}
+
+{% if object|identifier %}
+	<p class="field"><em>Identifier:</em> {{object|identifier}}</p>
+{% endif %}
+
+{% if object|description %}
+	<p class="field"><em>Description:</em> {{object|description}}</p>
+{% endif %}

@@ -1,0 +1,10 @@
+<H2>Browse</H2>
+<p class="description">Search, view and edit data</p>
+
+<ul>
+{% for cont in controller_list %}
+	<li>
+	<a href="{{ cont.url }}">{{ cont.title }}</a>: {{ cont.description }}
+	</li>
+{% endfor %}	
+</ul>

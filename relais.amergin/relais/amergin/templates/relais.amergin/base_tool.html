@@ -1,0 +1,62 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block header_title %}Amergin: Repository tools{% endblock %}
+
+{% block header_script_viewleft %}{% endblock %}
+{% block header_script_viewright %}{% endblock %}
+
+{% block header_script_onready %}
+	function convertForm( formId) {
+		var frm = new Ext.form.BasicForm(formId);
+		frm.render();
+		
+		var fields = frm.getValues()
+		for (key in fields) {
+		
+			var elem = Ext.get(key);
+			if (elem && elem.hasClass('combo-box')) {
+				var cb = new Ext.form.ComboBox({
+					transform:elem.dom.name,
+					typeAhead: true,
+					triggerAction: 'all',
+					width: elem.getWidth(),
+					forceSelection:true
+				});
+			}
+			else if (elem && elem.hasClass('date-picker')) {
+				var df = new Ext.form.DateField({format:'d/m/Y'});
+				df.applyTo(elem.dom.name);
+			}
+		
+			if (elem && elem.hasClass('resizeable')) {
+				var dwrapped = new Ext.Resizable(elem, {
+					wrap:true,
+					pinned:true,
+					width:400,
+					height:150,
+					minWidth:200,
+					minHeight: 50,
+					dynamic: true
+				});
+			}
+		}
+	}
+	convertForm('tool');
+{% endblock %}
+
+{% block body_title %}{{ title }} tool{% endblock %}
+{% block body_description %}{{ description }}{% endblock %}
+
+{% block body_center %}
+  <form id="tool" method="post" action="/submit/">
+  <table>
+  {{ form }}
+  <tr>
+	 <td><input type="submit" value="Submit" /></td>
+  </tr>
+  </table>
+  </form>
+{% endblock %}
+
+
+

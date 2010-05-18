@@ -1,0 +1,69 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block header_title %}Amergin: {{ plural_name }}{% endblock %}
+	
+{% block body_title %}Browsing {{ plural_name }}{% endblock %}
+
+	{% block header_script_viewleft %}
+		{
+			region: 'west',
+			title: 'Search',
+			collapsible: true,
+			split: true,
+			width: 250,
+			minSize: 200,
+			maxSize: 400,
+			margins: '0 0 0 10',
+			contentEl: 'left'
+		},
+	{% endblock %}
+	
+	{% block header_script_viewright %}
+	{% endblock %}
+	
+	{% block header_script_onready %}
+	var grid = new Ext.ux.grid.TableGrid ("record_table", {
+		stripeRows: true
+	});
+	{% endblock %}
+	
+{% block body_description %}
+	{% if objects|length != 1 %}
+		{{ objects|length }} records found.
+	{% else %}
+		1 record found.
+	{% endif %}
+{% endblock %}
+
+{% block body_center %}
+	{% if objects %}
+		<TABLE id="record_table">
+			<thead>
+				<tr style="background:#eeeeee;">
+					<th></th> 
+					<th>Id</th> 
+					<th>Title</th> 
+					<th>Description</th> 
+					<th>Action</th>
+				</tr> 
+			</thead>
+			<tbody>
+				{% for obj in objects %}
+					<tr>
+						<td>(checkbox)</td>
+						<td>{{ obj.identifier }}</td>
+						<td>{{ obj.title }}</td>
+						<td>{{ obj.description }}</td>
+						<td><A HREF="{{ obj|url }}">view</A></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+		</TABLE>
+	{% else %}
+		<div class="warning">
+			No {{ plural_name }} were found. If you believe this is an error,
+			contact the system administrator.
+		</div>
+	{% endif %}
+
+{% endblock %}

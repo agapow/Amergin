@@ -1,0 +1,40 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block header_title %}Amergin: viewing {{ name }}{% endblock %}
+	
+{% block body_title %}Viewing {{ name }} {{ id }}{% endblock %}
+
+	{% block header_script_viewleft %}
+		{
+			region: 'west',
+			title: 'Search',
+			collapsible: true,
+			split: true,
+			width: 250,
+			minSize: 200,
+			maxSize: 400,
+			margins: '0 0 0 10',
+			contentEl: 'left'
+		},
+	{% endblock %}
+	
+	{% block header_script_viewright %}
+	{% endblock %}
+	
+{% block body_description %}
+	{% if object %}
+		
+	{% else %}
+		A problem.
+	{% endif %}
+{% endblock %}
+
+{% block body_center %}
+	{% if object %}
+		<div class="error">No record with that ID was found. Either it does not
+		exist or you do not have permission to access it.</div>
+	{% else %}
+		{% include 'relais.amergin/base_object_fields.html' }
+	{% endif %}
+
+{% endblock %}
