@@ -1,0 +1,64 @@
+/*
+Common styles for Amergin.
+
+Apply before modification by javascript libraries.
+*/
+
+
+/*** RESET */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+
+/*** GENERAL BODY */
+body {
+	font-family: 'Lucida Sans Unicode', 'Lucida Grande', Arial, Verdana, sans-serif;
+	font-size: 12px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	font-family: Georgia;
+}
+
+.note {
+	
+}
+
+.warning {
+	
+}
+
+.error {
+	
+}
+
+
+/*** WELCOME PAGE */
+#controller_list, #tool_list, #settings {
+	margin: 5px;
+	color: red;
+}
+
+
+/*** RECORDS & BROWSING */
+#record_table {
+	border: 1px solid #bbb;
+	border-collapse: collapse;
+}
+
+#record_table td, #record_table th {
+	border:1px solid #ccc;
+	border-collapse: collapse;
+	padding:5px;
+}
+		  
+/*** SOUTH-FOOTER ELEMENTS */
+.footer {
+	font-size: 80%;
+	text-align: center;
+	color: dimgray;
+	border: 1px dotted dimgray;
+	padding: 2 10 2 10;
+}

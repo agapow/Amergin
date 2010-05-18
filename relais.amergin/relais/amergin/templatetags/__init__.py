@@ -9,6 +9,7 @@ SHORT DESCRIPTION
 
 import breadcrumbs
 import resourceurls
+import alerts
 
 
 ## CONSTANTS & DEFINES ###

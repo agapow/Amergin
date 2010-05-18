@@ -35,7 +35,7 @@ class BaseTool (object):
 		return "%s/tools/%s" % (settings.AMERGIN_URL, cls.identifier)
 
 	@classmethod
-	def show (cls, request):
+	def index (cls, request):
 		results = "bar"
 		form_cls = cls.ToolForm
 		if request.method == 'POST': # If the form has been submitted...
@@ -46,7 +46,7 @@ class BaseTool (object):
 		else:
 			form = form_cls() # An unbound form
 
-		return render_to_response('relais.amergin/basetool.html', {
+		return render_to_response('relais.amergin/base_tool.html', {
 				'identifier' : cls.identifier,
 				'title' : cls.title,
 				'description': cls.description,
@@ -54,7 +54,6 @@ class BaseTool (object):
 				'results': results,
 			}
 		)
-		return HttpResponse("Hello form")
 	
 	class ToolForm(forms.Form):
 		username = forms.CharField(max_length=100)

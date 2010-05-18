@@ -10,23 +10,101 @@
 	
 	{% block header_incl %}
 		<style type="text/css">
+			@import "/media/relais.amergin/css/common.css";
+		</style>	
+		<style type="text/css">
 			@import "/media/relais.amergin/extjs/resources/css/ext-all.css";
 		</style>
+		
 		<script type="text/javascript"
-		 src="/media/relais.amergin/extjs/adapter/ext/ext-base.js"></script>
+			src="/media/relais.amergin/extjs/adapter/ext/ext-base.js"></script>
 		<script type="text/javascript"
-		 src="/media/relais.amergin/extjs/ext-all.js"></script>
+			src="/media/relais.amergin/extjs/ext-all-debug.js"></script>
 	{% endblock %}
 
 	{% block header_script %}
+		<script type="text/javascript">
+			Ext.onReady(function ()
+			{
+				var viewport = new Ext.Viewport ({
+					layout: 'border',
+					items: [
+						
+						{% block header_script_viewnorth %}
+						new Ext.BoxComponent({
+							region: 'north',
+							el: 'north',
+							// set as natural height
+							//height: 32,
+							margins: '10 10 10 10'
+						}),
+						{% endblock %}
+			
+						{% block header_script_viewleft %}
+						{
+							region: 'west',
+							//id: 'west-panel',
+							title: 'West side',
+							collapsible: true,
+							split: true,
+							width: 200,
+							minSize: 175,
+							maxSize: 400,
+							margins: '0 0 0 10',
+							contentEl: 'left'
+						},
+						{% endblock %}
+						
+						{% block header_script_viewcenter %}
+						new Ext.BoxComponent({
+							region: 'center',
+							el: 'center',
+							// set as natural height
+							//height: 32,
+							margins: '2 5 2 5',
+							autoScroll: true
+						}),
+						{% endblock %}
+						
+						{% block header_script_viewright %}
+						{
+							region: 'east',
+							title: 'East Side',
+							collapsible: true,
+							split: true,
+							width: 200, // give east and west regions a width
+							minSize: 175,
+							maxSize: 400,
+							margins: '0 10 0 0',
+							contentEl: 'right'
+						},
+						{% endblock %}
+						
+						{% block header_script_viewsouth %}
+						new Ext.BoxComponent({
+							region: 'south',
+							contentEl: 'south',
+							// set as natural height
+							//height: 32,
+							margins: '10 10 10 10'
+						})
+						{% endblock %}
+					
+					]
+				});
+		
+			{% block header_script_onready %}{% endblock %}
+			
+			});
+		</script>
 	{% endblock %}
 
 	{% block header_extra %}
 	{% endblock %}
 
-</head class="{% block body_class %}base{% endblock %}">
+</head>
 
-<body>
+<body class="{% block body_class %}base{% endblock %}">
 
 {% block body_content %}
 	
@@ -34,37 +112,35 @@
 		{% block body_north %}
 			<H1>{% block body_title %}PAGE TITLE{% endblock %}</H1>
 			<P class="description">
-				{% block description %}DESCRIPTION{% endblock %}
+				{% block body_description %}DESCRIPTION{% endblock %}
 			</P>
+			<div id="alerts">
+				
+			</div>
 		{% endblock %}
 	</div>
 	
 	{% block body_main %}
 		<div id="left">
 			{% block body_left %}
-				left pane
 			{% endblock %}
 		</div>
 		 
 		<div id="center">
 			{% block body_center %}
-				center pane
+				SHOULD ALWAYS OVERRIDE THIS
 			{% endblock %}
 		</div>
 		 
 		<div id="right">
 			{% block body_right %}
-				right pane
 			{% endblock %}
 		</div>
 	{% endblock %}
 		
 	<div id="south">
 		{% block body_south %}
-			This is an Amergin 0.3 installation, based upon the Django web
-			developmenta stack (v1.1) and the Relais epi-informatics
-			suite (v0.5.6). Direct any problems to the system administrator
-			<A HREF="mailto:btv@iah.bbsrc.ac.uk">btv@iah.bbsrc.ac.uk</A>.
+			{% include "relais.amergin/footer.html" %}			
 		{% endblock %}
 	</div>
 
