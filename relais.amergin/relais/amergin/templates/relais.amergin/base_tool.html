@@ -1,61 +1,36 @@
 {% extends "relais.amergin/base.html" %}
 
+{% load uni_form_tags %}
+
 {% block header_title %}Amergin: Repository tools{% endblock %}
 
 {% block header_script_viewleft %}{% endblock %}
+
+{% block header_script_viewcenter %}
+	new Ext.BoxComponent({
+		region: 'center',
+		el: 'center',
+		// set as natural height
+		margins: '0 10 0 10',
+		autoScroll: true
+	}),
+{% endblock %}
+	
 {% block header_script_viewright %}{% endblock %}
 
-{% block header_script_onready %}
-	function convertForm( formId) {
-		var frm = new Ext.form.BasicForm(formId);
-		frm.render();
-		
-		var fields = frm.getValues()
-		for (key in fields) {
-		
-			var elem = Ext.get(key);
-			if (elem && elem.hasClass('combo-box')) {
-				var cb = new Ext.form.ComboBox({
-					transform:elem.dom.name,
-					typeAhead: true,
-					triggerAction: 'all',
-					width: elem.getWidth(),
-					forceSelection:true
-				});
-			}
-			else if (elem && elem.hasClass('date-picker')) {
-				var df = new Ext.form.DateField({format:'d/m/Y'});
-				df.applyTo(elem.dom.name);
-			}
-		
-			if (elem && elem.hasClass('resizeable')) {
-				var dwrapped = new Ext.Resizable(elem, {
-					wrap:true,
-					pinned:true,
-					width:400,
-					height:150,
-					minWidth:200,
-					minHeight: 50,
-					dynamic: true
-				});
-			}
-		}
-	}
-	convertForm('tool');
+{% block header_extra %}
+	<link rel="stylesheet" href="/media/uni_form/uni-form-generic.css" type="text/css" />
+	<link rel="stylesheet" href="/media/uni_form/uni-form.css" type="text/css" />
+	<script src="/media/uni_form/uni-form.jquery.js" type="text/javascript"></script>
 {% endblock %}
 
 {% block body_title %}{{ title }} tool{% endblock %}
 {% block body_description %}{{ description }}{% endblock %}
 
 {% block body_center %}
-  <form id="tool" method="post" action="/submit/">
-  <table>
-  {{ form }}
-  <tr>
-	 <td><input type="submit" value="Submit" /></td>
-  </tr>
-  </table>
-  </form>
+
+	{% uni_form form helper %}
+	
 {% endblock %}
 
 

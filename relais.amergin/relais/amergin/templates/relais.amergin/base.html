@@ -17,9 +17,14 @@
 		</style>
 		
 		<script type="text/javascript"
-			src="/media/relais.amergin/extjs/adapter/ext/ext-base.js"></script>
+			src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
+		</script>
 		<script type="text/javascript"
-			src="/media/relais.amergin/extjs/ext-all-debug.js"></script>
+			src="/media/relais.amergin/extjs/adapter/jquery/ext-jquery-adapter.js">
+		</script>
+		<script type="text/javascript"
+			src="/media/relais.amergin/extjs/ext-all-debug.js">
+		</script>
 	{% endblock %}
 
 	{% block header_script %}
@@ -36,7 +41,7 @@
 							el: 'north',
 							// set as natural height
 							//height: 32,
-							margins: '10 10 10 10'
+							margins: '10 15 10 15'
 						}),
 						{% endblock %}
 			
@@ -61,7 +66,7 @@
 							el: 'center',
 							// set as natural height
 							//height: 32,
-							margins: '2 5 2 5',
+							margins: '0 10 0 10',
 							autoScroll: true
 						}),
 						{% endblock %}
@@ -86,7 +91,7 @@
 							contentEl: 'south',
 							// set as natural height
 							//height: 32,
-							margins: '10 10 10 10'
+							margins: '10 15 10 15'
 						})
 						{% endblock %}
 					
@@ -110,8 +115,8 @@
 	
 	<div id="north">
 		{% block body_north %}
-			<H1>{% block body_title %}PAGE TITLE{% endblock %}</H1>
-			<P class="description">
+			<H1 class="body_title">{% block body_title %}PAGE TITLE{% endblock %}</H1>
+			<P class="description body_description">
 				{% block body_description %}DESCRIPTION{% endblock %}
 			</P>
 			<div id="alerts">

@@ -88,4 +88,5 @@ INSTALLED_APPS = (
 	'django.contrib.admin',
 	'django.contrib.admindocs',
 	'relais.amergin',
+	'uni_form',
 )

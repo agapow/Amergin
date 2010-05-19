@@ -28,11 +28,11 @@
 	{% endblock %}
 	
 {% block body_description %}
-	{% if objects|length != 1 %}
+	{% ifnotequal objects|length 1 %}
 		{{ objects|length }} records found.
 	{% else %}
 		1 record found.
-	{% endif %}
+	{% endifnotequal %}
 {% endblock %}
 
 {% block body_center %}
@@ -54,7 +54,7 @@
 						<td>{{ obj.identifier }}</td>
 						<td>{{ obj.title }}</td>
 						<td>{{ obj.description }}</td>
-						<td><A HREF="{{ obj|url }}">view</A></td>
+						<td><A HREF="{{ obj.url }}">view</A></td>
 					</tr>
 				{% endfor %}
 			</tbody>

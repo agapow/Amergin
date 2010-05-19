@@ -15,6 +15,8 @@ from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 
+from uni_form.helpers import FormHelper, Submit, Reset
+
 __all__ = [
 ]
 
@@ -27,6 +29,12 @@ class BaseTool (object):
 	identifier = "OVERRIDE ID IN DERIVED CLASS"
 	title = "OVERRIDE TITLE IN DERIVED CLASS"
 	description = "OVERRIDE ID IN DERIVED CLASS"
+	actions = [
+		('search','search this site'),
+	]
+	fieldsets = [
+		
+	]
 	
 	template = "tool.html"
 	
@@ -36,22 +44,51 @@ class BaseTool (object):
 
 	@classmethod
 	def index (cls, request):
-		results = "bar"
+		results = errors = None
+		
 		form_cls = cls.ToolForm
 		if request.method == 'POST': # If the form has been submitted...
 			form = form_cls(request.POST) # A form bound to the POST data
 			if form.is_valid(): # All validation rules pass
 				# Process the data in form.cleaned_data
 				results = "foo"
+			else:
+				errors = ['foo']
 		else:
 			form = form_cls() # An unbound form
 
+		helper = FormHelper()
+		
+		# Add in a class and id
+		helper.form_id = 'this-form-rocks'
+		helper.form_class = 'search'
+		
+		# if necessary, do fieldsets
+		if cls.fieldsets:
+			sets = []
+			for field_pair in cls.fieldsets:
+				if (isinstance (field_pair, basestring)):
+					# if just a naked field name
+					field_pair = ['', field_pair]
+				sets.append (Fieldset (*field_pair))
+			helper.add_layout (Layout(*sets))
+					
+
+		# add in submit actions and a reset button
+		for button in cls.actions:
+			submit = Submit (button[0], button[1])
+			helper.add_input (submit)
+		reset = Reset ('reset','reset button')
+		helper.add_input (reset)
+		
 		return render_to_response('relais.amergin/base_tool.html', {
 				'identifier' : cls.identifier,
 				'title' : cls.title,
 				'description': cls.description,
 				'form': form,
 				'results': results,
+				'errors': errors,
+				'helper': helper,
 			}
 		)
 	
