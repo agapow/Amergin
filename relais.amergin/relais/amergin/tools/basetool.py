@@ -16,6 +16,7 @@ from django.http import HttpResponse
 from django.shortcuts import render_to_response
 
 from uni_form.helpers import FormHelper, Submit, Reset
+from uni_form.helpers import Layout, Fieldset, Column
 
 __all__ = [
 ]
@@ -43,17 +44,27 @@ class BaseTool (object):
 		return "%s/tools/%s" % (settings.AMERGIN_URL, cls.identifier)
 
 	@classmethod
+	def process_form (cls, data):
+		## Errors
+		## Postconditions & returns
+		return data, None
+	
+	@classmethod
 	def index (cls, request):
-		results = errors = None
+		results = msgs = None
 		
 		form_cls = cls.ToolForm
 		if request.method == 'POST': # If the form has been submitted...
 			form = form_cls(request.POST) # A form bound to the POST data
 			if form.is_valid(): # All validation rules pass
 				# Process the data in form.cleaned_data
-				results = "foo"
+				# TODO: actually do the form work
+				results, msgs = cls.process_form (form.cleaned_data)
+				print form.cleaned_data
 			else:
-				errors = ['foo']
+				msgs = (
+					('error', 'there was problem processing the form'),
+				)
 		else:
 			form = form_cls() # An unbound form
 
@@ -61,7 +72,7 @@ class BaseTool (object):
 		
 		# Add in a class and id
 		helper.form_id = 'this-form-rocks'
-		helper.form_class = 'search'
+		helper.form_class = 'tool_form'
 		
 		# if necessary, do fieldsets
 		if cls.fieldsets:
@@ -87,7 +98,7 @@ class BaseTool (object):
 				'description': cls.description,
 				'form': form,
 				'results': results,
-				'errors': errors,
+				'errors': msgs,
 				'helper': helper,
 			}
 		)

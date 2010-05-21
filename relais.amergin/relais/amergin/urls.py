@@ -32,7 +32,6 @@ for c in controller_registry:
 
 for t in tool_registry:
 	add_urls.append ((r'^tools/%s$' % t.identifier, t.index))
-print add_urls
 
 urlpatterns = patterns('',
 	

@@ -46,9 +46,17 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 #north {
-	/* TODO: replace with amergin image */
-	background: transparent url('/media/relais.amergin/img/home.png') no-repeat right center;
+/*	background: transparent url('/media/relais.amergin/img/home.png')
+ 	no-repeat right center; */
 }
+
+.header_app_icon {
+	float: right;
+	position: absolute !important;
+	right: 5 !important; 
+	top: 0 !important; 
+}
+
 
 /*** WELCOME PAGE */
 #controller_list, #tool_list, #settings {
@@ -64,6 +72,17 @@ label {
 /*	color: #066; */
 }
 
+.tool_form {
+	padding: 5px !important;
+}
+
+.uniform fieldset {
+	border: 1px solid #bbb !important;
+}
+
+legend {
+	margin-left: 5px  !important;
+}
 
 /*** RECORDS & BROWSING */
 #record_table {

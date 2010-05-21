@@ -7,13 +7,14 @@
 {% block header_script_viewleft %}{% endblock %}
 
 {% block header_script_viewcenter %}
-	new Ext.BoxComponent({
+	{
 		region: 'center',
-		el: 'center',
-		// set as natural height
-		margins: '0 10 0 10',
-		autoScroll: true
-	}),
+		contentEl: 'center',
+		split: true,
+		autoScroll: true,
+		margins: '0 10 0 10'
+	},
+
 {% endblock %}
 	
 {% block header_script_viewright %}{% endblock %}

@@ -28,14 +28,19 @@ class LoadSeqsTool (BaseTool):
 	title = "Load biosequences"
 	description = """Perform a bulk upload of biosequences from a single file
 		to the repository. A collection can be formed from the contents."""
-
 	template = "tool.html"
+	fieldsets = [
+		['Source', 'use_ann_reader', 'format'],
+		['Labelling', 'bseq_src', 'bseq_desc', 'extra_ann'],
+		['Collect uploads', 'make_collection', 'collection_title',
+			'collection_desc', 'collection_src'],
+	]
 	
 	class ToolForm(forms.Form):
-		seqfile = forms.FileField(
-			label="Sequence file",
-			help_text="A file containing an alignment or multiple sequences.",
-		)
+		#seqfile = forms.FileField(
+		#	label="Sequence file",
+		#	help_text="A file containing an alignment or multiple sequences.",
+		#)
 		use_ann_reader = forms.BooleanField(
 			label="Use extended reader",
 			help_text="""Interprete directions embedded in
@@ -108,10 +113,6 @@ class LoadSeqsTool (BaseTool):
 			max_length=100,
 		)
 
-		fieldsets = [
-			(None,               {'fields': ['question']}),
-			('Date information', {'fields': ['collection_desc']}),
-		]
 	
 register_tool (LoadSeqsTool)
 
