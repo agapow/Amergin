@@ -43,30 +43,40 @@ class BaseTool (object):
 	def url (cls):
 		return "%s/tools/%s" % (settings.AMERGIN_URL, cls.identifier)
 
+	# Return visualised output and messages as result of form processing
+	#
 	@classmethod
 	def process_form (cls, data):
-		## Errors
+		## Preconditions & preparation:
+		msgs = results = []
+		## Main:
+		
 		## Postconditions & returns
-		return data, None
+		return msgs, results
 	
 	@classmethod
 	def index (cls, request):
+		## Preconditions & preparation:
 		results = msgs = None
 		
+		## Main:
+		# instantiate form in one of several ways ...
 		form_cls = cls.ToolForm
-		if request.method == 'POST': # If the form has been submitted...
-			form = form_cls(request.POST) # A form bound to the POST data
-			if form.is_valid(): # All validation rules pass
-				# Process the data in form.cleaned_data
-				# TODO: actually do the form work
-				results, msgs = cls.process_form (form.cleaned_data)
-				print form.cleaned_data
+		# if the form has been submitted...
+		if request.method == 'POST':
+			form = form_cls(request.POST, request.FILES)
+			# if the form is valid
+			if form.is_valid():
+				# get the clean data and do the work
+				print request
+				msgs = cls.process_form (form.cleaned_data)
 			else:
 				msgs = (
 					('error', 'there was problem processing the form'),
 				)
 		else:
-			form = form_cls() # An unbound form
+			# if you're coming to the form anew, make an unbound form
+			form = form_cls()
 
 		helper = FormHelper()
 		
@@ -89,16 +99,17 @@ class BaseTool (object):
 		for button in cls.actions:
 			submit = Submit (button[0], button[1])
 			helper.add_input (submit)
-		reset = Reset ('reset','reset button')
+		reset = Reset ('reset','Reset form')
 		helper.add_input (reset)
 		
+		## Postconditions & return:
 		return render_to_response('relais.amergin/base_tool.html', {
 				'identifier' : cls.identifier,
 				'title' : cls.title,
 				'description': cls.description,
 				'form': form,
 				'results': results,
-				'errors': msgs,
+				'messages': msgs,
 				'helper': helper,
 			}
 		)

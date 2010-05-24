@@ -30,8 +30,23 @@
 
 {% block body_center %}
 
+	{% if messages %}
+		{% for msg in messages %}
+			<div class="{{ msg.css_class }}">{{ msg.txt }}</div>
+		{% endfor %}
+	{% endif %}
+	
 	{% uni_form form helper %}
 	
+	{% if results %}
+		<div class="results">
+			<h2>Results</h2>
+		</div>
+		{% for res in results %}
+		
+		{% endfor %}
+	{% endif %}
+
 {% endblock %}
 
 
