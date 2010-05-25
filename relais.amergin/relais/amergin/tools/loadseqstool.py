@@ -14,7 +14,8 @@ from django import forms
 
 from relais.iah.btv.annotatedseqreader import (AnnotatedSeqReader,
    annotated_seqrec_to_bioseq)
-from relais.core.bpcompat.seqrecreader import SeqRecReader
+from relais.core.bpcompat.seqrecreader import SeqrecReader
+from relais.core.bpcompat.convert import bp_seqrec_to_bioseq
  
 from basetool import BaseTool
 from registry import register_tool
@@ -95,11 +96,23 @@ class LoadSeqsTool (BaseTool):
 			# read it! we have to do a fugly seqrec -> relais bseqs -> amergin bseqs
 			inseqs = []
 			for seqrec in reader:
-				bioseq = annotated_seqrec_to_bioseq (seqrec)
-				bioseq.source = unicode (options.source)
-				print_msg ("Read record '%s (%s)' ..." % (bioseq.title,
-					bioseq.identifier))
+				if data['source']:
+					seqrec.source = data['source']
+				if data['description']:
+					seqrec.description = data['description']
+				if data['annotation']:
+					ann_key, ann_val = [x.strip() for x in data['annotation'].split(':', 1)]
+					seqrec.annotations[ann_key.lowercase()] = ann_val
+				bioseq = seqrec_to_ambioseq (seqrec)
 				inseqs.append (bioseq)
+				
+			# load seqs and make collection
+			#overwrite_bseqs = forms.BooleanField(
+			#make_collection = forms.BooleanField(
+			#collection_title = forms.CharField(
+			#collection_desc = forms.CharField(
+			#collection_src = forms.CharField(
+				
 		except exceptions.StandardError, err:
 			print "Problem with '%s': %s" % (f, err)
 		except:
@@ -129,8 +142,8 @@ class LoadSeqsTool (BaseTool):
 				["genbank", "Genbank"],				
 			],
 			help_text="""If not given, the format will be guessed from the file
-				name. Currently recognised file types are: """ + \
-				' '.join (sort (EXT_TO_FILETYPE.keys())),
+				name. Currently recognised file types are: <tt>%s</tt>""" % \
+				' '.join (sorted (EXT_TO_FILETYPE.keys())),
 		)
 		bseq_src = forms.CharField(
 			label="Source",

@@ -28,65 +28,53 @@ from django.contrib import admin
 
 #admin.site.register(Poll, PollAdmin)
 
-class RepoAdmin (admin.ModelAdmin):
-	list_display = ('identifier', 'title')
-
-admin.site.register (Repository, RepoAdmin)
-
-class AssayAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (Assay, AssayAdmin)
-
-class BioseqannotationAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (Bioseqannotation, BioseqannotationAdmin)
-
-class BioseqcollectionAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (Bioseqcollection, BioseqcollectionAdmin)
-
-class BioseqcollectionsBioseqAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (BioseqcollectionsBioseq, BioseqcollectionsBioseqAdmin)
-
-class BioseqextrefAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (Bioseqextref, BioseqextrefAdmin)
-
-class BioseqfeatureAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (Bioseqfeature, BioseqfeatureAdmin)
-
-class BioseqqualifierAdmin (admin.ModelAdmin):
-	pass
-
-admin.site.register (Bioseqqualifier, BioseqqualifierAdmin)
+class BioseqAnnotationInline (admin.TabularInline):
+	model = BioseqAnnotation
+	extra = 1
+	verbose_name = "annotation"
+	verbose_name_plural = "annotations"
 
 class BioseqAdmin (admin.ModelAdmin):
-	pass
+	inlines = [
+		BioseqAnnotationInline,
+	]
 
 admin.site.register (Bioseq, BioseqAdmin)
 
-class DocumentAdmin (admin.ModelAdmin):
+
+class BioseqAnnotationAdmin (admin.ModelAdmin):
 	pass
 
-admin.site.register (Document, DocumentAdmin)
+admin.site.register (BioseqAnnotation, BioseqAnnotationAdmin)
 
-class RegionAdmin (admin.ModelAdmin):
+class BioseqCollectionAdmin (admin.ModelAdmin):
 	pass
 
-admin.site.register (Region, RegionAdmin)
+admin.site.register (BioseqCollection, BioseqCollectionAdmin)
 
-class SampleAdmin (admin.ModelAdmin):
+class BioseqCollectionsBioseqAdmin (admin.ModelAdmin):
 	pass
 
-admin.site.register (Sample, SampleAdmin)
+admin.site.register (BioseqCollectionsBioseq, BioseqCollectionsBioseqAdmin)
+
+class BioseqExtrefAdmin (admin.ModelAdmin):
+	pass
+
+admin.site.register (BioseqExtref, BioseqExtrefAdmin)
+
+class BioseqFeatureAdmin (admin.ModelAdmin):
+	pass
+
+admin.site.register (BioseqFeature, BioseqFeatureAdmin)
+
+class BioseqQualifierAdmin (admin.ModelAdmin):
+	pass
+
+admin.site.register (BioseqQualifier, BioseqQualifierAdmin)
+
+
+
+
 	
 
 ### TEST & DEBUG ###
