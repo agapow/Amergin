@@ -32,12 +32,12 @@ from django import forms
 
 #admin.site.register(Poll, PollAdmin)
 
-class MyBseqAdminForm(forms.ModelForm):
+class BioseqAnnotationAdminForm(forms.ModelForm):
 	class Meta:
-		model = Bioseq
-
+		model = BioseqAnnotation
 
 class BioseqAnnotationInline (admin.TabularInline):
+	form = BioseqAnnotationAdminForm
 	model = BioseqAnnotation
 	extra = 0
 	verbose_name = "annotation"
@@ -57,15 +57,13 @@ class BioseqAnnotationInline (admin.TabularInline):
 		return super (BioseqAnnotationInline, self).formfield_for_dbfield(
 			db_field,**kwargs)
 
-	def save_model(self, request, obj, form, change):
-		print request
-		obj.save()
-		
-	def save_formset(self, request, form, formset, change):
-		print request
 
+class BseqAdminForm(forms.ModelForm):
+	class Meta:
+		model = Bioseq
+		
 class BioseqAdmin (admin.ModelAdmin):
-	form = MyBseqAdminForm
+	form = BseqAdminForm
 	inlines = [
 		BioseqAnnotationInline,
 	]
