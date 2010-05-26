@@ -52,7 +52,7 @@ def create_identifier(id_prefix="", help_text=None):
 def create_internal_identifier(id_prefix="", help_text=None):
 	init_val_fn = lambda: generate_uid (id_prefix)
 	return models.CharField(max_length=32, primary_key=True, default=init_val_fn,
-		editable=False)
+		)
 	
 def create_title (help_text=None):
 	return models.CharField(max_length=72, blank=True)
@@ -177,9 +177,9 @@ class Bioseq (BasePrimaryModel):
 	title = create_title()
 	description = create_description()
 	source = create_source()
-	seqtype = models.CharField (max_length=32, blank=True,
+	seqtype = models.CharField (max_length=32, blank=False,
 		choices=BIOSEQ_TYPE_CHOICES, default=BIOSEQ_TYPE_CHOICES[0][0])
-	seqdata = models.TextField ()
+	seqdata = models.TextField (blank=False)
 	sample_id = models.CharField(max_length=32, blank=True)
 	class Meta:
 		db_table = u'biosequences'

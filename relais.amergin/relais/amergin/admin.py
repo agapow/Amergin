@@ -9,6 +9,10 @@ SHORT DESCRIPTION
 
 from models import *
 from django.contrib import admin
+from django.forms import widgets
+from django import forms
+
+
 #from amergin.polls.models import Choice
 
 
@@ -28,16 +32,45 @@ from django.contrib import admin
 
 #admin.site.register(Poll, PollAdmin)
 
+class MyBseqAdminForm(forms.ModelForm):
+	class Meta:
+		model = Bioseq
+
+
 class BioseqAnnotationInline (admin.TabularInline):
 	model = BioseqAnnotation
-	extra = 1
+	extra = 0
 	verbose_name = "annotation"
 	verbose_name_plural = "annotations"
+	readonly_fields = [
+		'identifier',
+	]
+	
+	def formfield_for_dbfield(self, db_field, **kwargs):
+		# sculpt annotation value field to smaller textarea
+		if (db_field.attname == 'value'):
+			kwargs['widget'] = widgets.Textarea(attrs={'rows': '3', 'cols': '50'})
+		# sucessful editting of inlines needs primary key to be passed,
+		# but don't want to show it
+		#elif (db_field.attname == 'identifier'):
+		#	kwargs['widget'] = widgets.HiddenInput
+		return super (BioseqAnnotationInline, self).formfield_for_dbfield(
+			db_field,**kwargs)
+
+	def save_model(self, request, obj, form, change):
+		print request
+		obj.save()
+		
+	def save_formset(self, request, form, formset, change):
+		print request
 
 class BioseqAdmin (admin.ModelAdmin):
+	form = MyBseqAdminForm
 	inlines = [
 		BioseqAnnotationInline,
 	]
+	radio_fields = {"seqtype": admin.HORIZONTAL}
+	search_fields = ['identifier', 'title', 'description']
 
 admin.site.register (Bioseq, BioseqAdmin)
 
