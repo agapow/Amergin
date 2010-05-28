@@ -47,21 +47,43 @@ def generate_uid (prefix="uid"):
 	
 def create_identifier(id_prefix="", help_text=None):
 	init_val_fn = lambda: generate_uid (id_prefix)
-	return models.CharField(max_length=32, primary_key=True, default=init_val_fn)
+	return models.CharField(
+		max_length=32,
+		primary_key=True,
+		help_text="""A unique identifier for the record. If not supplied, one
+			will be generated. It cannot be changed after object creation.""",
+	)
 
 def create_internal_identifier(id_prefix="", help_text=None):
 	init_val_fn = lambda: generate_uid (id_prefix)
-	return models.CharField(max_length=32, primary_key=True, default=init_val_fn,
-		)
+	return models.CharField(
+		max_length=32,
+		primary_key=True,
+	)
 	
 def create_title (help_text=None):
-	return models.CharField(max_length=72, blank=True)
+	return models.CharField (
+		max_length=72,
+		blank=True,
+		help_text="""A user friendly name for the record. This is optional and
+			need not be unique.""",
+	)
 	
 def create_description (help_text=None):
-	return models.TextField(blank=True)
+	return models.TextField(
+		blank=True,
+		help_text="""Notes on or a summary of the record.. This is optional and
+			need not be unique.""",
+	)
 	
 def create_source(help_text=None):
-	return models.CharField(max_length=32, blank=True)
+	return models.CharField(
+		max_length=32,
+		blank=True,
+		help_text="""The originating authority for this record. We suggest that
+			it be the database name (e.g. 'genbank') or a reverse-url naming
+			of the institute (e.g. 'uk.ac.iah.btv').""",
+	)
 	
 
 ### MODELS
@@ -111,12 +133,7 @@ class Repository (models.Model):
 
 ### ABSTRACT BASE MODELS
 
-class BaseModel (models.Model):
-	class Meta:
-		abstract = True
-		managed = False
-		  
-class BasePrimaryModel (BaseModel):
+class BasePrimaryModel (models.Model):
 	def __str__(self):
 		return smart_str(self.get_name())
 		
@@ -154,13 +171,17 @@ class BasePrimaryModel (BaseModel):
 		else:
 			return u''
 
+	@classmethod
+	def generate_uid (cls):
+		return generate_uid (cls.uid_prefix)
+		
 	class Meta:
 		abstract = True
 		managed = False		  
 		ordering = ['title', 'identifier']
 
 
-class BaseSecondaryModel (BaseModel):
+class BaseSecondaryModel (models.Model):
 	def __str__(self):
 		return smart_str(self.identifier)
 	
@@ -177,10 +198,25 @@ class Bioseq (BasePrimaryModel):
 	title = create_title()
 	description = create_description()
 	source = create_source()
-	seqtype = models.CharField (max_length=32, blank=False,
-		choices=BIOSEQ_TYPE_CHOICES, default=BIOSEQ_TYPE_CHOICES[0][0])
-	seqdata = models.TextField (blank=False)
+	seqtype = models.CharField ('Type',
+		max_length=32,
+		blank=False,
+		choices=BIOSEQ_TYPE_CHOICES,
+		default=BIOSEQ_TYPE_CHOICES[0][0],
+		help_text='Protein or DNA?',
+	)
+	seqdata = models.TextField ('Sequence data',
+		help_text='The raw sequence data. The standard IUPAC alphabet should be used.',
+		blank=False,
+	)
 	sample_id = models.CharField(max_length=32, blank=True)
+
+	uid_prefix = 'bseq'
+	
+	#@classmethod
+	#def generate_uid (cls):
+	#	return generate_uid (cls.uid_prefix)	
+	
 	class Meta:
 		db_table = u'biosequences'
 		verbose_name = 'biosequence'
@@ -189,9 +225,16 @@ class Bioseq (BasePrimaryModel):
 
 class BioseqAnnotation (models.Model):
 	identifier = create_internal_identifier (id_prefix="bsan")
-	name = models.CharField (max_length=32, blank=True)
-	value = models.TextField (blank=True)
+	name = models.CharField (max_length=32, blank=False)
+	value = models.TextField (blank=False)
 	biosequence = models.ForeignKey (Bioseq, related_name="annotations")
+	
+	uid_prefix = 'bsan'
+	
+	@classmethod
+	def generate_uid (cls):
+		return generate_uid (cls.uid_prefix)
+	
 	class Meta:
 		db_table = u'bioseqannotations'
 
