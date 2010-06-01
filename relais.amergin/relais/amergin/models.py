@@ -54,11 +54,12 @@ def create_identifier(id_prefix="", help_text=None):
 			will be generated. It cannot be changed after object creation.""",
 	)
 
-def create_internal_identifier(id_prefix="", help_text=None):
+def create_internal_identifier(id_prefix=""):
 	init_val_fn = lambda: generate_uid (id_prefix)
 	return models.CharField(
 		max_length=32,
 		primary_key=True,
+		#help_text="Not editable by user",
 	)
 	
 def create_title (help_text=None):
@@ -86,56 +87,21 @@ def create_source(help_text=None):
 	)
 	
 
-### MODELS
-
-class Repository (models.Model):
-	identifier = models.CharField ('ID',
-		max_length=16, primary_key=True,
-		help_text="""A unique identifier for the repository.
-			This will appear as part of its url.""",
-	)
-	title = models.CharField ('Title',
-		max_length=80,
-		help_text="""An informal name for the repository.
-			It need not be unique.""",
-	)
-	description = models.TextField ('Description',
-		blank=True,
-		help_text="""A short summary of the attached repository.""",
-	)
-	uri = models.CharField ('URI',
-		max_length=96,
-		help_text="""The access details for the attached Relais repository""",
-	)
-
-	class Meta:
-		verbose_name = 'relais repository'
-		verbose_name_plural = 'relais repositories'
-
-
-# This is an auto-generated Django model module.
-# You'll have to do the following manually to clean this up:
-#     * Rearrange models' order
-#     * Make sure each model has one field with primary_key=True
-# Feel free to rename the models, but don't rename db_table values or field names.
-#
-# Also note: You'll have to insert the output of 'django-admin.py sqlcustom [appname]'
-# into your database.
-
-#class AmerginRepository(models.Model):
-#    identifier = models.CharField(max_length=16, primary_key=True)
-#    title = models.CharField(max_length=80)
-#    description = models.TextField()
-#    uri = models.CharField(max_length=96)
-#    class Meta:
-#        db_table = u'amergin_repository'
-
 
 ### ABSTRACT BASE MODELS
 
 class BasePrimaryModel (models.Model):
+	"""
+	A base class for primary (standalone) database objects.
+	"""
+			
+	class Meta:
+		abstract = True
+		managed = False		  
+		ordering = ['title', 'identifier']
+	
 	def __str__(self):
-		return smart_str(self.get_name())
+		return smart_str (self.get_name())
 		
 	def get_name (self):
 		"""
@@ -174,22 +140,21 @@ class BasePrimaryModel (models.Model):
 	@classmethod
 	def generate_uid (cls):
 		return generate_uid (cls.uid_prefix)
-		
-	class Meta:
-		abstract = True
-		managed = False		  
-		ordering = ['title', 'identifier']
 
 
 class BaseSecondaryModel (models.Model):
 	def __str__(self):
 		return smart_str(self.identifier)
-	
+
+	@classmethod
+	def generate_uid (cls):
+		return generate_uid (cls.uid_prefix)
+		
 	class Meta:
 		abstract = True
 		managed = False		  
 		ordering = ['identifier']
-		
+
 
 ### DOMAIN MODELS
 
@@ -211,11 +176,7 @@ class Bioseq (BasePrimaryModel):
 	)
 	sample_id = models.CharField(max_length=32, blank=True)
 
-	uid_prefix = 'bseq'
-	
-	#@classmethod
-	#def generate_uid (cls):
-	#	return generate_uid (cls.uid_prefix)	
+	uid_prefix = 'bseq'	
 	
 	class Meta:
 		db_table = u'biosequences'
@@ -223,7 +184,7 @@ class Bioseq (BasePrimaryModel):
 		verbose_name_plural = 'biosequences'
 
 
-class BioseqAnnotation (models.Model):
+class BioseqAnnotation (BaseSecondaryModel):
 	identifier = create_internal_identifier (id_prefix="bsan")
 	name = models.CharField (max_length=32, blank=False)
 	value = models.TextField (blank=False)
@@ -231,12 +192,38 @@ class BioseqAnnotation (models.Model):
 	
 	uid_prefix = 'bsan'
 	
-	@classmethod
-	def generate_uid (cls):
-		return generate_uid (cls.uid_prefix)
-	
 	class Meta:
 		db_table = u'bioseqannotations'
+
+	
+class BioseqCollection (BasePrimaryModel):
+	identifier = create_identifier (id_prefix="bcol")
+	title = create_title()
+	description = create_description()
+	source = create_source()
+	members = models.ManyToManyField (Bioseq, through='BioseqCollectionMembership')
+	
+	uid_prefix = 'bcol'
+
+	class Meta:
+		db_table = u'bioseqcollections'
+		verbose_name = 'bioseq collection'
+		verbose_name_plural = 'bioseq collections'
+
+
+class BioseqCollectionMembership (models.Model):
+	collection = models.ForeignKey (BioseqCollection)
+	biosequence = models.ForeignKey (Bioseq)
+	
+	class Meta:
+		db_table = u'bioseqcollections_biosequences'
+		#managed = False		  
+
+	def __str__(self):
+		return smart_str (self.biosequence.get_name())
+
+
+
 
 
 class Assay (models.Model):
@@ -250,22 +237,6 @@ class Assay (models.Model):
 	sample_id = models.CharField(max_length=32, blank=True)
 	class Meta:
 	    db_table = u'assays'
-
-
-class BioseqCollection (models.Model):
-	identifier = create_identifier (id_prefix="bcol")
-	title = create_title()
-	description = create_description()
-	source = create_source()
-	class Meta:
-	    db_table = u'bioseqcollections'
-
-
-class BioseqCollectionsBioseq (models.Model):
-	collection_id = models.CharField(max_length=32, primary_key=True)
-	biosequence_id = models.CharField(max_length=32, primary_key=True)
-	class Meta:
-	    db_table = u'bioseqcollections_biosequences'
 
 
 class BioseqExtref (models.Model):
