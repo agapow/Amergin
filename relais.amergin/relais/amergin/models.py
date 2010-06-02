@@ -16,7 +16,11 @@ from django.utils.encoding import smart_str
 from django.db import models
 from django.forms import widgets
 
-from relais.core.config import BIOSEQ_TYPE_VOCAB
+from relais.core.config import (
+	BIOSEQ_TYPE_VOCAB,
+	BIOSEQ_ALPHABET_AMINOACID_LETTERS,
+	BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS,
+)
 
 from relais.amergin import morefields
 
@@ -171,7 +175,9 @@ class Bioseq (BasePrimaryModel):
 		help_text='Protein or DNA?',
 	)
 	seqdata = models.TextField ('Sequence data',
-		help_text='The raw sequence data. The standard IUPAC alphabet should be used.',
+		help_text="""The raw sequence data. The standard IUPAC alphabet should be
+			used, i.e. %s for nucleotide or %s for protein""" % (
+				BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS, BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS),
 		blank=False,
 	)
 	sample_id = models.CharField(max_length=32, blank=True)
@@ -217,13 +223,35 @@ class BioseqCollectionMembership (models.Model):
 	
 	class Meta:
 		db_table = u'bioseqcollections_biosequences'
-		#managed = False		  
+		managed = False		  
 
 	def __str__(self):
 		return smart_str (self.biosequence.get_name())
 
 
+class BioseqFeature (BaseSecondaryModel):
+	identifier = create_internal_identifier (id_prefix="bsft")
+	location = models.CharField(max_length=32, blank=True)
+	type = models.CharField(max_length=32, blank=True)
+	biosequence = models.ForeignKey (Bioseq, related_name="features")
 
+	uid_prefix = 'bsft'
+	
+	class Meta:
+		db_table = u'bioseqfeatures'
+
+
+class BioseqQualifier (models.Model):
+	identifier = models.CharField(max_length=32, primary_key=True)
+	name = models.CharField(max_length=32, blank=True)
+	value = models.TextField(blank=True)
+	seqfeature_id = models.CharField(max_length=32, blank=True)
+	class Meta:
+	    db_table = u'bioseqqualifiers'
+		 
+		 
+		 
+		 
 
 
 class Assay (models.Model):
@@ -247,22 +275,7 @@ class BioseqExtref (models.Model):
 	    db_table = u'bioseqextrefs'
 
 
-class BioseqFeature (models.Model):
-	identifier = models.CharField(max_length=32, primary_key=True)
-	location = models.CharField(max_length=32, blank=True)
-	type = models.CharField(max_length=32, blank=True)
-	biosequence_id = models.CharField(max_length=32, blank=True)
-	class Meta:
-	    db_table = u'bioseqfeatures'
 
-
-class BioseqQualifier (models.Model):
-	identifier = models.CharField(max_length=32, primary_key=True)
-	name = models.CharField(max_length=32, blank=True)
-	value = models.TextField(blank=True)
-	seqfeature_id = models.CharField(max_length=32, blank=True)
-	class Meta:
-	    db_table = u'bioseqqualifiers'
 
 
 class Document (models.Model):

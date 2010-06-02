@@ -67,7 +67,7 @@ MIDDLEWARE_CLASSES = (
 	'django.middleware.common.CommonMiddleware',
 	'django.contrib.sessions.middleware.SessionMiddleware',
 	'django.contrib.auth.middleware.AuthenticationMiddleware',
-	'debug_toolbar.middleware.DebugToolbarMiddleware',
+	#'debug_toolbar.middleware.DebugToolbarMiddleware',
 )
 
 ROOT_URLCONF = 'amdev.urls'
@@ -90,5 +90,5 @@ INSTALLED_APPS = (
 	'django.contrib.admindocs',
 	'relais.amergin',
 	'uni_form',
-	'debug_toolbar',
+	#'debug_toolbar',
 )

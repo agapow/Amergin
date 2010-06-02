@@ -32,7 +32,7 @@ def welcome (request):
 	info_dict = {
 		'isolate_cnt': len(models.Sample.objects.all()),
 		'bioseq_cnt': len(models.Bioseq.objects.all()),
-		'bioseqcollection_cnt': len(models.Bioseqcollection.objects.all()),
+		'bioseqcollection_cnt': len(models.BioseqCollection.objects.all()),
 		'controller_list': controller_registry,
 		'tool_list': tool_registry,
 	}
