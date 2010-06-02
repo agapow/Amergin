@@ -194,7 +194,10 @@ class BioseqAnnotation (BaseSecondaryModel):
 	identifier = create_internal_identifier (id_prefix="bsan")
 	name = models.CharField (max_length=32, blank=False)
 	value = models.TextField (blank=False)
-	biosequence = models.ForeignKey (Bioseq, related_name="annotations")
+	biosequence = models.ForeignKey (Bioseq,
+		related_name="annotations",
+		help_text="The bioseq this annotation is attached to",	
+	)
 	
 	uid_prefix = 'bsan'
 	
@@ -233,7 +236,10 @@ class BioseqFeature (BaseSecondaryModel):
 	identifier = create_internal_identifier (id_prefix="bsft")
 	location = models.CharField(max_length=32, blank=True)
 	type = models.CharField(max_length=32, blank=True)
-	biosequence = models.ForeignKey (Bioseq, related_name="features")
+	biosequence = models.ForeignKey (Bioseq,
+		related_name="features",
+		help_text="The bioseq this feature is attached to",	
+	)
 
 	uid_prefix = 'bsft'
 	
@@ -241,11 +247,17 @@ class BioseqFeature (BaseSecondaryModel):
 		db_table = u'bioseqfeatures'
 
 
-class BioseqQualifier (models.Model):
+class BioseqQualifier (BaseSecondaryModel):
 	identifier = models.CharField(max_length=32, primary_key=True)
 	name = models.CharField(max_length=32, blank=True)
 	value = models.TextField(blank=True)
-	seqfeature_id = models.CharField(max_length=32, blank=True)
+	seqfeature = models.ForeignKey (BioseqFeature,
+		related_name="qualifiers",
+		help_text="The feature this qualifier is attached to",
+	)
+
+	uid_prefix = 'bsql'
+
 	class Meta:
 	    db_table = u'bioseqqualifiers'
 		 

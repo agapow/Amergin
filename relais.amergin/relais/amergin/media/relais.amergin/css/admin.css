@@ -1,4 +1,5 @@
-
+/* extra styles added to the amergin admin pages */
+  
 input[readonly=True] {
 	background-color: lightgray;
 }

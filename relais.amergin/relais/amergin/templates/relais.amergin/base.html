@@ -1,158 +1,24 @@
+{% extends "admin/base.html" %}
+{% load i18n %}
 {% load resourceurls %}
 
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-    <meta http-equiv="Content-type" content="text/html; charset=utf-8" />
-    <meta http-equiv="Content-Language" content="en-us" />
-    <meta name="robots" content="NONE,NOARCHIVE" />
-	 
-	<title>{% block header_title %}HEAD TITLE{% endblock %}</title>
-	
-	{% block header_incl %}
-		<style type="text/css">
-			@import "/media/relais.amergin/css/common.css";
-		</style>	
-		<style type="text/css">
-			@import "/media/relais.amergin/extjs/resources/css/ext-all.css";
-		</style>
-		
-		<script type="text/javascript"
-			src="http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js">
-		</script>
-		<script type="text/javascript"
-			src="/media/relais.amergin/extjs/adapter/jquery/ext-jquery-adapter.js">
-		</script>
-		<script type="text/javascript"
-			src="/media/relais.amergin/extjs/ext-all-debug.js">
-		</script>
-	{% endblock %}
+{% block title %}Amergin: {{ title }}{% endblock %}
 
-	{% block header_script %}
-		<script type="text/javascript">
-			Ext.onReady(function ()
-			{
-				var viewport = new Ext.Viewport ({
-					layout: 'border',
-					items: [
-						
-						{% block header_script_viewnorth %}
-						new Ext.BoxComponent({
-							region: 'north',
-							el: 'north',
-							// set as natural height
-							//height: 32,
-							margins: '10 15 10 15'
-						}),
-						{% endblock %}
-			
-						{% block header_script_viewleft %}
-						{
-							region: 'west',
-							//id: 'west-panel',
-							title: 'West side',
-							collapsible: true,
-							split: true,
-							width: 200,
-							minSize: 175,
-							maxSize: 400,
-							margins: '0 0 0 10',
-							contentEl: 'left'
-						},
-						{% endblock %}
-						
-						{% block header_script_viewcenter %}
-						new Ext.BoxComponent({
-							region: 'center',
-							el: 'center',
-							// set as natural height
-							//height: 32,
-							margins: '0 10 0 10',
-							autoScroll: true
-						}),
-						{% endblock %}
-						
-						{% block header_script_viewright %}
-						{
-							region: 'east',
-							title: 'East Side',
-							collapsible: true,
-							split: true,
-							width: 200, // give east and west regions a width
-							minSize: 175,
-							maxSize: 400,
-							margins: '0 10 0 0',
-							contentEl: 'right'
-						},
-						{% endblock %}
-						
-						{% block header_script_viewsouth %}
-						new Ext.BoxComponent({
-							region: 'south',
-							contentEl: 'south',
-							// set as natural height
-							//height: 32,
-							margins: '10 15 10 15'
-						})
-						{% endblock %}
-					
-					]
-				});
-		
-			{% block header_script_onready %}{% endblock %}
-			
-			});
-		</script>
-	{% endblock %}
-
-	{% block header_extra %}
-	{% endblock %}
-
-</head>
-
-<body class="{% block body_class %}base{% endblock %}">
-
-{% block body_content %}
-	
-	<div id="north">
-		{% block body_north %}
-			<H1 class="body_title">{% block body_title %}PAGE TITLE{% endblock %}</H1>
-			<P class="description body_description">
-				{% block body_description %}DESCRIPTION{% endblock %}
-			</P>
-			<A HREF="/" class="header_app_icon">
-				<IMG SRC="/media/relais.amergin/img/home.png">
-			</A>
-			<div id="alerts">
-				
-			</div>
-		{% endblock %}
-	</div>
-	
-	{% block body_main %}
-		<div id="left">
-			{% block body_left %}
-			{% endblock %}
-		</div>
-		 
-		<div id="center">
-			{% block body_center %}
-				SHOULD ALWAYS OVERRIDE THIS
-			{% endblock %}
-		</div>
-		 
-		<div id="right">
-			{% block body_right %}
-			{% endblock %}
-		</div>
-	{% endblock %}
-		
-	<div id="south">
-		{% block body_south %}
-			{% include "relais.amergin/footer.html" %}			
-		{% endblock %}
-	</div>
-
+{% block extrahead %}
+	{% include_css common.css %}
 {% endblock %}
 
-</body>
-</html>
+
+{% block bodyclass %}TEMPLATE CLASS{% endblock %}
+
+{% block branding %}
+	<h1 id="site-name">{% block body-title %}Amergin{% endblock %}</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
+
+<!-- pass variable title in -->
+
+
+
+{% block footer %}{% include "relais.amergin/footer.html" %}{% endblock %}

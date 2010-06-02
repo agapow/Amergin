@@ -95,6 +95,16 @@ class BasePrimaryObjectAdmin (admin.ModelAdmin):
 		#	"my_code.js",
 		)
 
+class BaseSecondaryObjectAdmin (admin.ModelAdmin):
+	search_fields = ['identifier']
+	
+	class Media:
+		css = {
+			"all": (settings.MEDIA_URL + "/relais.amergin/css/admin.css",)
+		}
+		js = (
+		#	"my_code.js",
+		)
 
 ### ADMIN MODELS & AND FORMS
 ### Bioseq form and admin model
@@ -130,12 +140,42 @@ class BioseqAnnotationInline (admin.TabularInline):
 			db_field,**kwargs)
 
 
-# NOTE: don't need until we make a standalone admin form for annotations
+class BioseqAnnotationAdmin (BaseSecondaryObjectAdmin):
+	form = BioseqAnnotationAdminForm
 
-#class BioseqAnnotationAdmin (admin.ModelAdmin):
-#	pass
-#
-#admin.site.register (BioseqAnnotation, BioseqAnnotationAdmin)
+admin.site.register (BioseqAnnotation, BioseqAnnotationAdmin)
+
+
+### Bioseq qualifier form and admin model
+
+class BioseqQualifierAdminForm (SecondaryObjectAdminForm):
+	class Meta:
+		model = BioseqQualifier
+
+	def clean_name (self):
+		return self.cleaned_data['name'].strip()
+		
+	def clean_value (self):
+		return self.cleaned_data['value'].strip()
+		
+class BioseqQualifierInline (admin.TabularInline):
+	form = BioseqQualifierAdminForm
+	model = BioseqQualifier
+	extra = 0
+	verbose_name = "qualifier"
+	verbose_name_plural = "qualifiers"
+
+	def formfield_for_dbfield(self, db_field, **kwargs):
+		if (db_field.attname == 'value'):
+			kwargs['widget'] = widgets.Textarea(attrs={'rows': '3', 'cols': '30'})
+		return super (BioseqQualifierInline, self).formfield_for_dbfield(
+			db_field,**kwargs)
+		
+		
+class BioseqQualifierAdmin (BaseSecondaryObjectAdmin):
+	form = BioseqQualifierAdminForm
+
+admin.site.register (BioseqQualifier, BioseqQualifierAdmin)
 
 
 ### Bioseq feature form and admin model
@@ -157,12 +197,12 @@ class BioseqFeatureInline (admin.TabularInline):
 	verbose_name = "feature"
 	verbose_name_plural = "features"
 	
-
-# NOTE: don't need until we make a standalone admin form for feature
-
-class BioseqFeatureAdmin (admin.ModelAdmin):
-	pass
-
+class BioseqFeatureAdmin (BaseSecondaryObjectAdmin):
+	form = BioseqFeatureAdminForm
+	inlines = [
+		BioseqQualifierInline,
+	]
+	
 admin.site.register (BioseqFeature, BioseqFeatureAdmin)
 
 

@@ -40,10 +40,7 @@ def welcome (request):
 		info_dict,
 		context_instance = RequestContext(request)
 	)
-	return render_to_response ('relais.amergin/welcome.html',
-		info_dict,
-		context_instance = RequestContext(request)
-	)
+
 	
 def analyseseq	(request, repo_id):
 	return render_to_response ('relais.amergin/analyseseqtool.html',
