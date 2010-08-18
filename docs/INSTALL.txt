@@ -1,0 +1,9 @@
+==========================
+Installing an Amergin site
+==========================
+
+Create media directory
+
+Create uploads in media directory
+
+Point at correct dir
