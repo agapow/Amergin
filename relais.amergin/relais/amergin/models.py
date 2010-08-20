@@ -17,9 +17,9 @@ from django.db import models
 from django.forms import widgets
 
 from relais.core.config import (
-	BIOSEQ_TYPE_VOCAB,
-	BIOSEQ_ALPHABET_AMINOACID_LETTERS,
-	BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS,
+   BIOSEQ_TYPE_VOCAB,
+   BIOSEQ_ALPHABET_AMINOACID_LETTERS,
+   BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS,
 )
 
 from relais.amergin import morefields
@@ -47,49 +47,49 @@ def generate_uid (prefix="uid"):
 	UID_BASE += 1
 	date_str = datetime.now().strftime ("%Y%m%d-%H%M%S")
 	return u"%s.%s.%s" % (prefix, date_str, UID_BASE)
-	
-	
+
+
 def create_identifier(id_prefix="", help_text=None):
 	init_val_fn = lambda: generate_uid (id_prefix)
 	return models.CharField(
-		max_length=32,
-		primary_key=True,
-		help_text="""A unique identifier for the record. If not supplied, one
+	   max_length=32,
+	   primary_key=True,
+	   help_text="""A unique identifier for the record. If not supplied, one
 			will be generated. It cannot be changed after object creation.""",
 	)
 
 def create_internal_identifier(id_prefix=""):
 	init_val_fn = lambda: generate_uid (id_prefix)
 	return models.CharField(
-		max_length=32,
-		primary_key=True,
-		#help_text="Not editable by user",
+	   max_length=32,
+	   primary_key=True,
+	   #help_text="Not editable by user",
 	)
-	
+
 def create_title (help_text=None):
 	return models.CharField (
-		max_length=72,
-		blank=True,
-		help_text="""A user friendly name for the record. This is optional and
+	   max_length=72,
+	   blank=True,
+	   help_text="""A user friendly name for the record. This is optional and
 			need not be unique.""",
 	)
-	
+
 def create_description (help_text=None):
 	return models.TextField(
-		blank=True,
-		help_text="""Notes on or a summary of the record.. This is optional and
+	   blank=True,
+	   help_text="""Notes on or a summary of the record.. This is optional and
 			need not be unique.""",
 	)
-	
+
 def create_source(help_text=None):
 	return models.CharField(
-		max_length=32,
-		blank=True,
-		help_text="""The originating authority for this record. We suggest that
+	   max_length=32,
+	   blank=True,
+	   help_text="""The originating authority for this record. We suggest that
 			it be the database name (e.g. 'genbank') or a reverse-url naming
 			of the institute (e.g. 'uk.ac.iah.btv').""",
 	)
-	
+
 
 
 ### ABSTRACT BASE MODELS
@@ -98,29 +98,29 @@ class BasePrimaryModel (models.Model):
 	"""
 	A base class for primary (standalone) database objects.
 	"""
-			
+
 	class Meta:
 		abstract = True
 		managed = False		  
 		ordering = ['title', 'identifier']
-	
+
 	def __str__(self):
 		return smart_str (self.get_name())
-		
+
 	def get_name (self):
 		"""
 		Return a nicely formatted string of the title and id.
-		
+
 		This generates a nice moniker for the record for presentation purposes,
 		in the form "title (id)", accounting for either or both of those fields being
 		missing. It is not intended to be a unique identifier.
-		
+
 		:Returns:
 			A unicode string of the title and id, or an empty string if neither
 			is available.
-		
+
 		For example::
-		
+
 			>>> n1 = NamedRelaisObject()
 			>>> n1.get_name()
 			''
@@ -130,7 +130,7 @@ class BasePrimaryModel (models.Model):
 			>>> n1.identifier = ' an id'
 			>>> n1.get_name()
 			'My title! (an id)'
-		
+
 		"""
 		if (self.title and self.identifier and (self.title != self.identifier)):
 			return u'%s (%s)' % (self.title.strip(), self.identifier.strip())
@@ -153,7 +153,7 @@ class BaseSecondaryModel (models.Model):
 	@classmethod
 	def generate_uid (cls):
 		return generate_uid (cls.uid_prefix)
-		
+
 	class Meta:
 		abstract = True
 		managed = False		  
@@ -168,22 +168,22 @@ class Bioseq (BasePrimaryModel):
 	description = create_description()
 	source = create_source()
 	seqtype = models.CharField ('Type',
-		max_length=32,
-		blank=False,
-		choices=BIOSEQ_TYPE_CHOICES,
-		default=BIOSEQ_TYPE_CHOICES[0][0],
-		help_text='Protein or DNA?',
-	)
+	                            max_length=32,
+	                            blank=False,
+	                            choices=BIOSEQ_TYPE_CHOICES,
+	                            default=BIOSEQ_TYPE_CHOICES[0][0],
+	                            help_text='Protein or DNA?',
+	                            )
 	seqdata = models.TextField ('Sequence data',
-		help_text="""The raw sequence data. The standard IUPAC alphabet should be
+	                            help_text="""The raw sequence data. The standard IUPAC alphabet should be
 			used, i.e. %s for nucleotide or %s for protein""" % (
-				BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS, BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS),
-		blank=False,
-	)
+	                                                           BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS, BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS),
+	                                                        blank=False,
+	                                                        )
 	sample_id = models.CharField(max_length=32, blank=True)
 
 	uid_prefix = 'bseq'	
-	
+
 	class Meta:
 		db_table = u'biosequences'
 		verbose_name = 'biosequence'
@@ -195,23 +195,23 @@ class BioseqAnnotation (BaseSecondaryModel):
 	name = models.CharField (max_length=32, blank=False)
 	value = models.TextField (blank=False)
 	biosequence = models.ForeignKey (Bioseq,
-		related_name="annotations",
-		help_text="The bioseq this annotation is attached to",	
-	)
-	
+	                                 related_name="annotations",
+	                                 help_text="The bioseq this annotation is attached to",	
+	                                 )
+
 	uid_prefix = 'bsan'
-	
+
 	class Meta:
 		db_table = u'bioseqannotations'
 
-	
+
 class BioseqCollection (BasePrimaryModel):
 	identifier = create_identifier (id_prefix="bcol")
 	title = create_title()
 	description = create_description()
 	source = create_source()
 	members = models.ManyToManyField (Bioseq, through='BioseqCollectionMembership')
-	
+
 	uid_prefix = 'bcol'
 
 	class Meta:
@@ -223,10 +223,10 @@ class BioseqCollection (BasePrimaryModel):
 class BioseqCollectionMembership (models.Model):
 	collection = models.ForeignKey (BioseqCollection)
 	biosequence = models.ForeignKey (Bioseq)
-	
+
 	class Meta:
 		db_table = u'bioseqcollections_biosequences'
-		managed = False		  
+		managed = False
 
 	def __str__(self):
 		return smart_str (self.biosequence.get_name())
@@ -237,12 +237,12 @@ class BioseqFeature (BaseSecondaryModel):
 	location = models.CharField(max_length=32, blank=True)
 	type = models.CharField(max_length=32, blank=True)
 	biosequence = models.ForeignKey (Bioseq,
-		related_name="features",
-		help_text="The bioseq this feature is attached to",	
-	)
+	                                 related_name="features",
+	                                 help_text="The bioseq this feature is attached to",	
+	                                 )
 
 	uid_prefix = 'bsft'
-	
+
 	class Meta:
 		db_table = u'bioseqfeatures'
 
@@ -252,18 +252,18 @@ class BioseqQualifier (BaseSecondaryModel):
 	name = models.CharField(max_length=32, blank=True)
 	value = models.TextField(blank=True)
 	seqfeature = models.ForeignKey (BioseqFeature,
-		related_name="qualifiers",
-		help_text="The feature this qualifier is attached to",
-	)
+	                                related_name="qualifiers",
+	                                help_text="The feature this qualifier is attached to",
+	                                )
 
 	uid_prefix = 'bsql'
 
 	class Meta:
-	    db_table = u'bioseqqualifiers'
-		 
-		 
-		 
-		 
+		db_table = u'bioseqqualifiers'
+
+
+
+
 
 
 class Assay (models.Model):
@@ -276,7 +276,7 @@ class Assay (models.Model):
 	results = models.TextField(blank=True)
 	sample_id = models.CharField(max_length=32, blank=True)
 	class Meta:
-	    db_table = u'assays'
+		db_table = u'assays'
 
 
 class BioseqExtref (models.Model):
@@ -284,7 +284,7 @@ class BioseqExtref (models.Model):
 	urn = models.CharField(max_length=72, blank=True)
 	biosequence_id = models.CharField(max_length=32, blank=True)
 	class Meta:
-	    db_table = u'bioseqextrefs'
+		db_table = u'bioseqextrefs'
 
 
 
@@ -300,7 +300,7 @@ class Document (models.Model):
 	content = models.TextField(blank=True) # This field type is a guess.
 	sample_id = models.CharField(max_length=32, blank=True)
 	class Meta:
-	    db_table = u'documents'
+		db_table = u'documents'
 
 class Region (models.Model):
 	identifier = models.CharField(max_length=32, primary_key=True)
@@ -312,7 +312,7 @@ class Region (models.Model):
 	type = models.CharField(max_length=32, blank=True)
 	within_region_id = models.CharField(max_length=32, blank=True)
 	class Meta:
-	    db_table = u'regions'
+		db_table = u'regions'
 
 class Sample (models.Model):
 	identifier = models.CharField(max_length=32, primary_key=True)
@@ -332,4 +332,4 @@ class Sample (models.Model):
 	host = models.CharField(max_length=32, blank=True)
 	status = models.CharField(max_length=32, blank=True)
 	class Meta:
-	    db_table = u'samples'
+		db_table = u'samples'

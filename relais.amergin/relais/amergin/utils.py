@@ -19,6 +19,31 @@ __docformat__ = 'restructuredtext en'
 
 ### IMPLEMENTATION ###	
 
+def if_none (x, none_val, other_val):
+	"""
+	If the value is None, return the first value; other return the other.
+	
+	This is a convenience function, covering up for Python's lack of a ternary
+	operator, and is largely used for brevity in c'tors.
+	"""
+	if (x is None):
+		return none_val
+	else:
+		return other_val
+
+def first_not_none (*args):
+	"""
+	Return the first argument that is not None.
+	
+	This is a convenience function, largely intended for use in c'tors and
+	assigning default values to members.
+	"""
+	for a in args:
+		if a is not None:
+			return a
+	return None
+	
+	
 def idsrc_to_str (ident, src=None):
 	"""
 	Package an ID and source designator into a single string.

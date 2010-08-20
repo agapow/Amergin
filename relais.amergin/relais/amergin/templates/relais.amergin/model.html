@@ -1,0 +1,6 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block mainbody %}
+	<p>There {% if obj_cnt == 1 %} is 1 {{ controller.name }} {% else %} are
+	{{ obj_cnt }} {{ controller.name_plural }} {% endif %} in the database.<p> 
+{% endblock %}

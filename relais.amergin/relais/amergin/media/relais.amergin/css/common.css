@@ -11,6 +11,21 @@ Apply before modification by javascript libraries.
 /*  padding: 0;*/
 /*}*/
 
+#header {
+	background: darkred;
+}
+
+#branding h1 {
+	color: white;
+}
+
+div.breadcrumbs a {
+	color: darkred;
+}
+
+div.breadcrumbs {
+	color: #444;
+}
 
 /*** GENERAL BODY */
 /*body {*/
@@ -21,7 +36,7 @@ Apply before modification by javascript libraries.
 
 h1, h2, h3, h4, h5, h6 {
 	font-family: font-family: Georgia, Times, 'Times New Roman', sans-serif;
-	color: #066;
+	color: darkred;
 }
 
 .body_title {
@@ -29,7 +44,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .description {
-	color: #888;
+	color: #444;
 	font-style: italic;
 }
 
@@ -99,10 +114,10 @@ legend {
 /*** SOUTH-FOOTER ELEMENTS */
 .footer {
 	text-align: center;
-	color: #888;
+	color: #333;
 	font-style: italic;
-	border: 1px dotted #888;
-	padding: 2 10 2 10;
+	border: 1px dotted #444;
+	padding: 5px 6px;
 	margin: 10 10 10 10;
 }
 

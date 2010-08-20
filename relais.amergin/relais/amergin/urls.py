@@ -16,38 +16,31 @@ from django.http import HttpResponsePermanentRedirect
 import models
 from relais.amergin.controllers.registry import registry as controller_registry
 from relais.amergin.tools.registry import registry as tool_registry
+from relais.amergin.controllers.welcomecontroller import WelcomeController
+from relais.amergin.controllers.modelcontroller import ModelController
 
 import config
 
 
 ### CONSTANTS & DEFINES ###
 
-add_urls = []
-#for c in controller_registry:
-#	add_urls.append ((r'^browse/%s$' % c.identifier, c.index))
-#	add_urls.append ((r'^browse/%s/create$' % c.identifier, c.create))
-#	add_urls.append ((r'^browse/%s/edit$' % c.identifier, c.edit))
-#	add_urls.append ((r'^browse/%s/(?P<id>[^/]+)/destroy$' % c.identifier, c.destroy))
-#	add_urls.append ((r'^browse/%s/(?P<id>[^/]+)$' % c.identifier, c.view))
+model_controllers = [
+	ModelController (models.Bioseq),
+]
 
-for c in controller_registry:
-	for url, action in c.get_views():
-		add_urls.append ((r'^browse/%s$' % url, action))
-
-for t in tool_registry:
-	add_urls.append ((r'^tools/%s$' % t.identifier, t.index))
-
-urlpatterns = patterns('',
-	
-	# top level opening page
-	(r'^$', 'relais.amergin.views.welcome'),
-	
-	# redirect "browse" and "tools" directory to welcome page
-	(r'^browse$', lambda request: HttpResponsePermanentRedirect(r'/')),
-	(r'^tools$', lambda request: HttpResponsePermanentRedirect(r'/')),
-	
-	*add_urls
+controller_tree = WelcomeController (
+	subcontrollers = dict ([(m.url, m) for m in model_controllers])
 )
+ 
+
+urlpatterns = controller_tree.patterns()
+#
+#   (r'^foo$', include (controller_tree.patterns())),
+#
+#	# redirect "browse" and "tools" directory to welcome page
+#	#(r'^browse$', lambda request: HttpResponsePermanentRedirect(r'/')),
+#	#(r'^tools$', lambda request: HttpResponsePermanentRedirect(r'/')),
+#)
 
 
 ### IMPLEMENTATION ###	

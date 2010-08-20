@@ -2,4 +2,10 @@
 
 {% block header-title %}Amergin: a curation interface for epidata{% endblock %}
 
-{% block body-title %}Welcome to Amergin{% endblock %}</h1>
+
+{% block mainbody %}
+	<p>Browse:</p>
+	{% for sc in subcontrollers %}
+		{{ sc }}
+	{% endfor %}
+{% endblock %}

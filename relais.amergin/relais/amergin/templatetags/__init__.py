@@ -10,6 +10,7 @@ SHORT DESCRIPTION
 import breadcrumbs
 import resourceurls
 import alerts
+import partials
 
 
 ## CONSTANTS & DEFINES ###

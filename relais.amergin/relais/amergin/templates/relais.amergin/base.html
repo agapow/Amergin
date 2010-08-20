@@ -2,23 +2,34 @@
 {% load i18n %}
 {% load resourceurls %}
 
+<!-- what appears as the page title on window header -->
 {% block title %}Amergin: {{ title }}{% endblock %}
 
 {% block extrahead %}
 	{% include_css common.css %}
 {% endblock %}
 
-
 {% block bodyclass %}TEMPLATE CLASS{% endblock %}
 
 {% block branding %}
+	<!-- what appears at the top of the visible page in the branding area -->
 	<h1 id="site-name">{% block body-title %}Amergin{% endblock %}</h1>
 {% endblock %}
 
 {% block nav-global %}{% endblock %}
 
-<!-- pass variable title in -->
+<!-- the "title" variable appears in content area -->
 
 
+********
+
+{% block content %}
+	{% if description %}
+		<p class="description">{{ description }}</p>
+	{% endif %}
+	{% block mainbody %}
+		<!-- where we do most of our customisation -->
+	{% endblock %}
+{% endblock %}
 
 {% block footer %}{% include "relais.amergin/footer.html" %}{% endblock %}

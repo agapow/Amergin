@@ -4,7 +4,8 @@ from django.shortcuts import render_to_response
 from django.conf import settings
 
 class BaseAction (object):
-	def __init__ (self):
+	def __init__ (self, identifier=None, url=None, template=None):
+		self.identifier = identifier or self.__class__.__name__.lower()
 		self.url = ""
 		self.template = 'relais.amergin/base_browse_index.html'
 		

@@ -1,11 +1,24 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+Controller for biosequence actions.
 
+"""
+
+### IMPORTS ###
+
+from modelcontroller import ModelController
 from relais.amergin import models
-from registry import register_controller
 
-class BioseqController(BaseController):
-	model = models.Bioseq
-	identifier = "bioseqs"
-	title = "Biosequences"
-	description = "Molecular sequences derived from isolates."
-	
-register_controller(BioseqController)
+
+### CONSTANTS & DEFINES ###
+
+### IMPLEMENTATION ###
+
+class BioseqController (ModelController):
+	"""
+	"""
+	def __init__ (self):
+		ModelController.__init__ (self, models.Bioseq,
+			description="Molecular sequences derived from isolates.",							  
+		)
