@@ -69,7 +69,7 @@ class BaseController(object):
 			'controller': self,
 		}
 		default.update (kwargs)
-		self.render (request, default)
+		return self.render (request, default)
 		
 	def render (self, request, dct):
 		return render_to_response ([self.template, self.fallback_template],
