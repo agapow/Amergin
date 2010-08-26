@@ -1,6 +1,45 @@
 {% extends "relais.amergin/base.html" %}
 
+{% load pagination_tags %}
+
+{% block bodyclass %}{{ controller.identifier }}{% endblock %}
+
 {% block mainbody %}
-	<p>There {% if obj_cnt == 1 %} is 1 {{ controller.name }} {% else %} are
-	{{ obj_cnt }} {{ controller.name_plural }} {% endif %} in the database.<p> 
+
+	{% block model_list %}
+		<p>There {% if obj_cnt == 1 %} is 1 matching {{ controller.name }} {% else %}
+		are {{ obj_cnt }} matching {{ controller.name_plural }} {% endif %} in the
+		database.</p>
+		
+		{% if 0 < obj_cnt %}
+			{% autopaginate object_list 10 %}
+			
+			<table class="record_list {{ identifier }}">
+				{# table header #}
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Description</th>						
+					</tr>
+				</thead>
+				{# table body #}
+				<tbody>
+					{% for obj in object_list %}
+						<tr class="{% cycle 'odd' 'even' %}" id="{{ object.identifier }}">
+							<td>
+								{{ obj.name }}
+							</td>
+							<td>
+								{{ obj.description }}
+							</td>
+						</tr>
+					{% endfor %}	
+				</tbody>
+			</table>
+			
+			{% paginate %} <!-- this renders the links to navigate through the pages -->
+	
+		{% endif %}
+	{% endblock %}
+	 
 {% endblock %}

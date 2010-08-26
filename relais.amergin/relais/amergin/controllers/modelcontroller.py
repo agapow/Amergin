@@ -7,10 +7,23 @@ An base class for controllers based on models.
 
 ### IMPORTS ###
 
+import re
+
+from django.views.generic import list_detail
+from django.template.loader import select_template
+from django.http import HttpResponsePermanentRedirect
+from django.conf.urls.defaults import *
+from django.contrib.auth.decorators import login_required
+
+from relais.amergin.utils import (is_sequence, is_callable, is_string)
+
 from basecontroller import BaseController
 
 
 ### CONSTANTS & DEFINES ###
+
+NAME_TO_ID_RE = re.compile ('\s+')
+
 
 ### IMPLEMENTATION ###
 
@@ -20,14 +33,6 @@ class ModelController (BaseController):
 	
 	Mainly uses the model to provide names and so forth.
 	"""
-	# TODO: need a way to tell contained actions about controller, e.g. pass name
-	# TODO: can we turn all those ugly calls below into class properties?
-	
-	# identifier: unique id or name for controller, currently used for
-	#	autogeneration of url and template name.
-	# url: visible component in url
-	# title: "SHOULD PROVIDE READABLE TITLE"
-	# description = "SHOULD PROVIDE READABLE DESCRIPTION"
 	
 	fallback_template = "relais.amergin/model.html"
 	
@@ -37,83 +42,36 @@ class ModelController (BaseController):
 		self.name = self.model._meta.verbose_name
 		self.name_plural = self.model._meta.verbose_name_plural
 		BaseController.__init__ (self,
-			identifier = identifier or self.name_plural,
+			identifier = identifier or NAME_TO_ID_RE.sub ('', self.name_plural),
 			description=description,
-			title=title,
-			template=template,
+			title= title or self.name_plural,
+			template=template or "relais.amergin/model.html",
 			url=url,
 			subcontrollers=subcontrollers,
 		)
-
-	def view (self, request, **kwargs):
-		# retrieve all objects
-		retrieved_objs = self.model.objects.all()
-		return BaseController.view (self, request,
-			model=self.model,
-			objs=retrieved_objs,
-		   obj_cnt=len (retrieved_objs),
+		
+	def context (self):
+		context = BaseController.context (self)
+		context.update ({
+			'model': self.model,
+		})
+		return context
+		
+	def render (self, request, dct):
+		"""
+		Given a request and mapping of variables, render and return appropriately.
+		"""
+		# TODO: pagination
+		# TODO: filter
+		query_set = self.model.objects.all()
+		dct.update ({
+			'obj_cnt': query_set.count(),			
+		})
+		return list_detail.object_list (
+			request,
+			queryset = self.model.objects.all(),
+			template_name = self.template,
+			#template_object_name = "books",
+			extra_context = dct,
 		)
-		
-	#@classmethod
-	#def url (cls):
-		#return "%s/browse/%s" % (settings.AMERGIN_URL, cls.identifier)
-		
-	#@classmethod
-	#def index_url (cls):
-		#return cls.url()
-
-	#@classmethod
-	#def create_url (cls):
-		#return "%s/create" % cls.index_url()
-		
-	#@classmethod
-	#def destroy_url (cls, id):
-		#return "%s/%s/destroy" % (cls.index_url(), id)
-		
-	#@classmethod
-	#def edit_url (cls, id):
-		#return "%s/%s/edit" % (cls.index_url(), id)
-		
-	#@classmethod
-	#def view_url (cls, id):
-		#return "%s/%s/edit" % (cls.index_url(), id)
-		
-	##@classmethod
-	##def index (cls, request):
-	##	found_objs = cls.model.objects.all()
-	##	return render_to_response('relais.amergin/base_browse_index.html', {
-	##			'name' : cls.model._meta.verbose_name,
-	##			'plural_name' : cls.model._meta.verbose_name_plural,
-	##			'objects': found_objs,
-	##			'obj_cnt': len (found_objs),
-	##		}
-	##	)
-	
-	##@classmethod
-	##def view (cls, id=None):
-	##	found_objs = cls.model.objects.all()
-	##	try: 
-	##		obj = cls.model.objects.get(identifier=id)
-	##	except cls.model.DoesNotExist:
-	##		# we have no object!  do something
-	##		obj = None
-	##	return render_to_response('relais.amergin/base_browse_view.html', {
-	##			'name' : cls.model._meta.verbose_name,
-	##			'plural_name' : cls.model._meta.verbose_name_plural,
-	##			'object': obj,
-	##		}
-	##	)
-		
-	#@classmethod
-	#def create (cls):
-		#return HttpResponse("Hello world")
-	
-	#@classmethod
-	#def destroy (cls, id):
-		#return HttpResponse("Hello world")
-	
-	#@classmethod
-	#def edit (cls, id):
-		#return HttpResponse("Hello world")
-	
 

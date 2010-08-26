@@ -1,0 +1,31 @@
+{% extends "relais.amergin/rest_show.html" %}
+{% load formatseq %}
+
+
+{% block secondaryfields %}
+
+	<p class="field"><b>Sequence type:</b> {{ obj.seqtype|lower }}</p>
+	
+	<p class="field"><b>Sequence:</b></p>
+	{{ obj.seqdata|formatseq|safe }}
+
+	<p class="field"><b>Annotations:</b></p>
+	<ul>
+		{% for ann in obj.annotations.all %}
+			<li>{{ ann.name }}: {{ ann.value }}</li>
+		{% endfor %}	
+	</ul>
+
+	
+	<p class="field"><b>Features:</b></p>
+	<ul>
+		{% for feat in obj.features.all %}
+			<li>{{ feat.location }}: {{ feat.type }}</li>
+		{% endfor %}
+	</ul>
+
+	<p class="field"><b>Related sample:</b> {{ obj.sample_id }}</p>
+
+{% endblock %}
+
+

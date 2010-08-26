@@ -11,6 +11,7 @@ import re
 
 from django.conf.urls.defaults import *
 from django.shortcuts import get_object_or_404, render_to_response
+from django.http import HttpResponsePermanentRedirect
 
 from relais.amergin.utils import first_not_none
 
@@ -48,98 +49,47 @@ class BaseController(object):
 		self.url = url or self.identifier
 		self.title = title or ID_TO_TITLE_RE.sub (' ', self.identifier).capitalize()
 		self.description = description
-		self.subcontrollers = subcontrollers
+		self.subcontrollers = {}
+		for k, v in subcontrollers.iteritems():
+			self.add_subcontroller (k, v)
 		self.parent = None
 	
+	def add_subcontroller (self, url, sc):
+		sc.url = url
+		sc.parent = self
+		self.subcontrollers[url] = sc
+		
 	def patterns (self):
-		"""
-		Return a list of the urls and actions contained in this controller.
-		"""
-		patts = [url (u, c.view, name="%s-%s" % (self.identifier, c.identifier))
-			for u, c in self.subcontrollers.iteritems()]
-		patts.append (('^$', self.view))
-		return patterns ('',
-			*patts
-		)
+		"""Return the urlpatterns of all that within this controller."""
+		patts = []
+		for u, c in self.subcontrollers.iteritems():
+			patts.append ((r'^%s/' % u,
+				include (c)))
+			patts.append ((r'^%s$' % u,
+				lambda request: HttpResponsePermanentRedirect (r'%s/' % u)))
+		patts.append (url ('^$', self.view, name=self.identifier))
+		return patterns ('', *patts)
+		
+	urlpatterns = property (patterns)
 
 	def view (self, request, **kwargs):
-		default = {
+		"""Return default rendering/view."""
+		context = self.context()
+		context.update (kwargs)
+		return self.render (request, context)
+		
+	def render (self, request, dct):
+		"""
+		Given a request and mapping of variables, render and return appropriately.
+		"""
+		return render_to_response ([self.template, self.fallback_template],
+			dct)		
+		
+	def context (self):
+		"""Return values to be included in template."""	
+		return {
 			'title': self.title,
 			'description': self.description,
 			'controller': self,
+			'msgs': [],
 		}
-		default.update (kwargs)
-		return self.render (request, default)
-		
-	def render (self, request, dct):
-		return render_to_response ([self.template, self.fallback_template],
-			dct)		
-
-
-
-
-
-		
-	#@classmethod
-	#def url (cls):
-		#return "%s/browse/%s" % (settings.AMERGIN_URL, cls.identifier)
-		
-	#@classmethod
-	#def index_url (cls):
-		#return cls.url()
-
-	#@classmethod
-	#def create_url (cls):
-		#return "%s/create" % cls.index_url()
-		
-	#@classmethod
-	#def destroy_url (cls, id):
-		#return "%s/%s/destroy" % (cls.index_url(), id)
-		
-	#@classmethod
-	#def edit_url (cls, id):
-		#return "%s/%s/edit" % (cls.index_url(), id)
-		
-	#@classmethod
-	#def view_url (cls, id):
-		#return "%s/%s/edit" % (cls.index_url(), id)
-		
-	#@classmethod
-	#def index (cls, request):
-		#found_objs = cls.model.objects.all()
-		#return render_to_response('relais.amergin/base_browse_index.html', {
-				#'name' : cls.model._meta.verbose_name,
-				#'plural_name' : cls.model._meta.verbose_name_plural,
-				#'objects': found_objs,
-				#'obj_cnt': len (found_objs),
-			#}
-		#)
-	
-	#@classmethod
-	#def view (cls, id=None):
-	#	found_objs = cls.model.objects.all()
-	#	try: 
-	#		obj = cls.model.objects.get(identifier=id)
-	#	except cls.model.DoesNotExist:
-	#		# we have no object!  do something
-	#		obj = None
-	#	return render_to_response('relais.amergin/base_browse_view.html', {
-	#			'name' : cls.model._meta.verbose_name,
-	#			'plural_name' : cls.model._meta.verbose_name_plural,
-	#			'object': obj,
-	#		}
-	#	)
-	#	
-	#@classmethod
-	#def create (cls):
-	#	return HttpResponse("Hello world")
-	#
-	#@classmethod
-	#def destroy (cls, id):
-	#	return HttpResponse("Hello world")
-	#
-	#@classmethod
-	#def edit (cls, id):
-	#	return HttpResponse("Hello world")
-	#
-

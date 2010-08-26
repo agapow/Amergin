@@ -114,7 +114,7 @@ class BaseTool (object):
 			}
 		)
 	
-	class ToolForm(forms.Form):
+	class ToolForm (forms.Form):
 		username = forms.CharField(max_length=100)
 		email = forms.EmailField()
 		password = forms.CharField(max_length=100)

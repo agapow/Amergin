@@ -1,0 +1,35 @@
+{% extends "relais.amergin/base.html" %}
+
+{% block bodyclass %}security{% endblock %}
+
+{% block branding %}
+	<!-- what appears at the top of the visible page in the branding area -->
+	<h1 id="site-name">{% block body-title %}Amergin{% endblock %}</h1>
+{% endblock %}
+
+
+{% block content_title %}<h1>Access denied</h1>{% endblock %}
+
+<!-- the "title" variable appears in content area -->
+
+{% block content %}
+	<div class="backto">{% block backto %}{% endblock %}</div>
+	
+	{% if msgs %}
+		<div class="messages">
+			{% for msg in msgs %}
+				<div class="flash {{ msg.css_class }}">{{ msg.text }}</div>
+			{% endfor %}
+		</div>	
+	{% endif %}
+	
+	{% block description %}
+		{% if description %}<p class="description">{{ description }}</p>{% endif %}
+	{% endblock %}
+	
+	{% block mainbody %}
+		<!-- where we do most of our customisation -->
+	{% endblock %}
+{% endblock %}
+
+{% block footer %}{% include "relais.amergin/footer.html" %}{% endblock %}

@@ -4,8 +4,10 @@
 
 
 {% block mainbody %}
-	<p>Browse:</p>
-	{% for sc in subcontrollers %}
-		{{ sc }}
-	{% endfor %}
+		{% for k, v in controller.subcontrollers.items %}
+			<h3><a href="{{ v.url }}/">{{ v.title }}</a></h3>
+			
+			<p class="description">{{ v.description }}</p>
+		{% endfor %}
+		
 {% endblock %}

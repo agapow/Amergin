@@ -1,0 +1,11 @@
+{% extends "relais.amergin/rest.html" %}
+
+{% block more_column_headers %}
+	<th>Type</th>
+	<th>Length</th>
+{% endblock %}
+
+{% block more_column_data %}
+	<td>{{ obj.seqtype }}</td>
+	<td>{{ obj.seqdata|length }}</td>
+{% endblock %}

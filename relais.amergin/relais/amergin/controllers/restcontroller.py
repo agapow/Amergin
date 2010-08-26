@@ -1,93 +1,93 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+"""
+An base class for model controllers with a rest interface
 
-import modelcontroller
+"""
+
+### IMPORTS ###
+
+from django.conf.urls.defaults import *
+from django.shortcuts import get_object_or_404, render_to_response
+
+from modelcontroller import ModelController
+from relais.amergin.dev import *
+from relais.amergin import messages
 
 
-class RestController (modelcontroller.ModelController):
+### CONSTANTS & DEFINES ###
+
+### IMPLEMENTATION ###
+
+class RestController (ModelController):
 	"""
-	A model controller provided with a standard set of REST actions.
-	
+	A model controller with a rest interface.
 	"""
 	
-	actions = [
-		DefaultAction(),
-	]
-	
-	@classmethod
-	def get_title (cls):
-		"""
-		Find the text that will entitle views.
-		"""
-		# NOTE: a title is not compulsory, so view should handle the null case
-		# TODO: default to capitalised identifier or classname
-		return getattr (cls, 'title', "Browsing %s" % cls.get_name_plural())
-	
-
-
-
-
-
-
-		
-	@classmethod
-	def url (cls):
-		return "%s/browse/%s" % (settings.AMERGIN_URL, cls.identifier)
-		
-	@classmethod
-	def index_url (cls):
-		return cls.url()
-
-	@classmethod
-	def create_url (cls):
-		return "%s/create" % cls.index_url()
-		
-	@classmethod
-	def destroy_url (cls, id):
-		return "%s/%s/destroy" % (cls.index_url(), id)
-		
-	@classmethod
-	def edit_url (cls, id):
-		return "%s/%s/edit" % (cls.index_url(), id)
-		
-	@classmethod
-	def view_url (cls, id):
-		return "%s/%s/edit" % (cls.index_url(), id)
-		
-	@classmethod
-	def index (cls, request):
-		found_objs = cls.model.objects.all()
-		return render_to_response('relais.amergin/base_browse_index.html', {
-				'name' : cls.model._meta.verbose_name,
-				'plural_name' : cls.model._meta.verbose_name_plural,
-				'objects': found_objs,
-				'obj_cnt': len (found_objs),
-			}
+	def __init__ (self, model, identifier=None, description="", title=None,
+		template=None, url=None, subcontrollers={}):
+		ModelController.__init__ (self,
+			model=model,
+			identifier=identifier,
+			description=description,
+			title=title,
+			template=template or "relais.amergin/rest.html",
+			url=url,
+			subcontrollers=subcontrollers,
 		)
+		self.template_show = "relais.amergin/rest_show_%s.html" % self.identifier
+		
+	def patterns (self):
+		"""
+		Return a list of the urls and actions contained in this controller.
+		"""
+		patts = [
+			# create
+			url (r'^create$', self.create, name="%s-create" % self.identifier),
+			# view
+			url (r'^(?P<id>[^/]+)$', self.show, name="%s-show" % self.identifier),
+			# delete
+			url (r'^(?P<id>[^/]+)/delete$', self.delete, name="%s-delete" % self.identifier),
+			# edit
+			url (r'^(?P<id>[^/]+)/edit$', self.edit, name="%s-edit" % self.identifier),
+			# index
+			url ('^$', self.view, name=self.identifier),
+		]
+		## Return:
+		pp ("I'm here")
+		pp (patts)
+		return patterns ('', *patts)
 	
-	@classmethod
-	def view (cls, id=None):
-		found_objs = cls.model.objects.all()
-		try: 
-			obj = cls.model.objects.get(identifier=id)
-		except cls.model.DoesNotExist:
-			# we have no object!  do something
+	urlpatterns = property (patterns)
+	
+	def create (self, request):
+		context = self.context()
+		pass
+		
+	def show (self, request, id=None):
+		context = self.context()
+
+		try:
+			obj = self.model.objects.get (identifier=id)
+		except:
 			obj = None
-		return render_to_response('relais.amergin/base_browse_view.html', {
-				'name' : cls.model._meta.verbose_name,
-				'plural_name' : cls.model._meta.verbose_name_plural,
-				'object': obj,
-			}
-		)
+			context['msgs'].append (messages.Error ("""Can't find %s:
+				either it does not exist or you do not have permission to access
+				it.""" % self.name))
+		context.update({
+			'title': '%s %s' % (self.name, id),
+			'obj': obj,
+			'description': None,
+		})
+		pp (self.template_show)
+		return render_to_response ([self.template_show, 'relais.amergin/rest_show.html'],
+			context)
 		
-	@classmethod
-	def create (cls):
-		return HttpResponse("Hello world")
+	def delete (self, request, id):
+		pass
+		
 	
-	@classmethod
-	def destroy (cls, id):
-		return HttpResponse("Hello world")
+	def edit (self, request, id):
+		pass
+		
 	
-	@classmethod
-	def edit (cls, id):
-		return HttpResponse("Hello world")
-	
-

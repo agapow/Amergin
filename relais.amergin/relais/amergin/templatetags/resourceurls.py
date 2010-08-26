@@ -76,7 +76,7 @@ class InclCssNode (Node):
 		self.vars = map (Variable, vars)
 
 	def render (self, context):
-		tmpl = """<LINK href="%s" rel="stylesheet" type="text/css">"""
+		tmpl = """<link href="%s" rel="stylesheet" type="text/css" />"""
 		res_url = self.vars[0].var
 		return tmpl % url_join (settings.MEDIA_URL, 'relais.amergin', 'css', res_url)	
 

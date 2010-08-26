@@ -73,7 +73,19 @@ def str_to_idsrc (s):
 		return splits[0]
 
 
+def is_sequence (obj):
+	"""Can this object act as a sequence?"""
+	return hasattr (obj, '__len__')
+	
 
+def is_callable (obj):
+	"""Can this object be called?"""
+	return hasattr (obj, '__call__')
+
+def is_string (obj):
+	return isinstance (obj, basestring)
+		
+	
 ### TEST & DEBUG ###
 
 def _doctest ():

@@ -1,0 +1,65 @@
+{% extends "relais.amergin/base.html" %}
+{% load pagination_tags %}
+{% load truncate %}
+{% load adminurl %}
+
+{% block bodyclass %}{{ controller.identifier }}-index{% endblock %}
+
+{% block backto %}<a href="..">Back to browse</a>{% endblock %}
+
+{% block mainbody %}
+
+	{% block model_list %}
+		<p>There {% if obj_cnt == 1 %} is 1 matching {{ controller.name }} {% else %}
+		are {{ obj_cnt }} matching {{ controller.name_plural }} {% endif %} in the
+		database.</p>
+		
+
+		{% if 0 < obj_cnt %}
+			{% autopaginate object_list 10 %}
+			<table class="record_list {{ identifier }}">
+				{# table header #}
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Description</th>
+						{% block more_column_headers %}{% endblock %}
+					</tr>
+				</thead>
+				{# table body #}
+				<tbody>
+					{% for obj in object_list %}
+						<tr class="{% cycle 'odd' 'even' %}" id="{{ object.identifier }}">
+							<td>
+								<a href="{{ obj.identifier|urlencode }}">{{ obj.get_name }}</a>
+							</td>
+							<td>
+								{% with obj.description as desc %}
+									{% if desc %}
+										{% if desc|length < 20 %}
+											{{ desc }}
+										{% else %}
+											{{ desc|truncate:20 }}
+										{% endif %}
+									{% endif %}
+								{% endwith %}
+							</td>
+							{% block more_column_data %}{% endblock %}
+						</tr>
+					{% endfor %}	
+				</tbody>
+			</table>
+			
+			{% paginate %} <!-- this renders the links to navigate through the pages -->
+	
+		{% endif %}
+	{% endblock %}
+
+	<div class="buttons">
+		<p>
+			<a href="{{ controller.model|adminurl }}/add/"
+				class="button-link">Create a new {{ controller.name }}</a>
+		</p>	
+	</div>
+
+{% endblock %}

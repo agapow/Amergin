@@ -141,6 +141,8 @@ class BasePrimaryModel (models.Model):
 		else:
 			return u''
 
+	name = property (get_name)
+	
 	@classmethod
 	def generate_uid (cls):
 		return generate_uid (cls.uid_prefix)
@@ -168,18 +170,18 @@ class Bioseq (BasePrimaryModel):
 	description = create_description()
 	source = create_source()
 	seqtype = models.CharField ('Type',
-	                            max_length=32,
-	                            blank=False,
-	                            choices=BIOSEQ_TYPE_CHOICES,
-	                            default=BIOSEQ_TYPE_CHOICES[0][0],
-	                            help_text='Protein or DNA?',
-	                            )
+		max_length=32,
+		blank=False,
+		choices=BIOSEQ_TYPE_CHOICES,
+		default=BIOSEQ_TYPE_CHOICES[0][0],
+		help_text='Protein or DNA?',
+	)
 	seqdata = models.TextField ('Sequence data',
-	                            help_text="""The raw sequence data. The standard IUPAC alphabet should be
+	   help_text="""The raw sequence data. The standard IUPAC alphabet should be
 			used, i.e. %s for nucleotide or %s for protein""" % (
-	                                                           BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS, BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS),
-	                                                        blank=False,
-	                                                        )
+	         BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS, BIOSEQ_ALPHABET_NUCLEOTIDE_LETTERS),
+	         blank=False,
+	      )
 	sample_id = models.CharField(max_length=32, blank=True)
 
 	uid_prefix = 'bseq'	
@@ -195,9 +197,9 @@ class BioseqAnnotation (BaseSecondaryModel):
 	name = models.CharField (max_length=32, blank=False)
 	value = models.TextField (blank=False)
 	biosequence = models.ForeignKey (Bioseq,
-	                                 related_name="annotations",
-	                                 help_text="The bioseq this annotation is attached to",	
-	                                 )
+		related_name="annotations",
+		help_text="The bioseq this annotation is attached to",	
+	)
 
 	uid_prefix = 'bsan'
 
@@ -237,9 +239,9 @@ class BioseqFeature (BaseSecondaryModel):
 	location = models.CharField(max_length=32, blank=True)
 	type = models.CharField(max_length=32, blank=True)
 	biosequence = models.ForeignKey (Bioseq,
-	                                 related_name="features",
-	                                 help_text="The bioseq this feature is attached to",	
-	                                 )
+		related_name="features",
+		help_text="The bioseq this feature is attached to",	
+	)
 
 	uid_prefix = 'bsft'
 
@@ -252,9 +254,9 @@ class BioseqQualifier (BaseSecondaryModel):
 	name = models.CharField(max_length=32, blank=True)
 	value = models.TextField(blank=True)
 	seqfeature = models.ForeignKey (BioseqFeature,
-	                                related_name="qualifiers",
-	                                help_text="The feature this qualifier is attached to",
-	                                )
+		related_name="qualifiers",
+		help_text="The feature this qualifier is attached to",
+	)
 
 	uid_prefix = 'bsql'
 

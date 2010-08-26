@@ -1,0 +1,20 @@
+{% extends "relais.amergin/base.html" %}
+{% load uni_form_tags %}
+
+{% block backto %}<a href="..">Back to tools</a>{% endblock %}
+
+{% block mainbody %}
+	{% uni_form form helper %}
+
+	{% if results %}
+		<div class="results">
+			<h2>Results</h2>
+			{% block results %}
+				{% for res in results %}
+					{{ res }}
+				{% endfor %}
+			{% endblock %}
+		</div>
+	{% endif %}
+{% endblock %}
+

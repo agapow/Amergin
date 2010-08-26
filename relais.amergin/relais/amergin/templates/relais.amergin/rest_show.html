@@ -1,0 +1,34 @@
+{% extends "relais.amergin/base.html" %}
+{% load adminurl %}
+
+{% block bodyclass %}{{ controller.identifier }}-show{% endblock %}
+
+{% block backto %}<a href=".">Back to index</a>{% endblock %}
+
+{% block description %}
+	{% if obj.description %}
+		<p class="description">ffff{{ obj.description }}</p>
+	{% endif %}
+{% endblock %}
+			
+{% block mainbody %}
+		{% if obj %}
+			{% block primaryfields %}
+				<p class="field"><b>Identifier:</b> {{ obj.identifier }}</p>
+				<p class="field"><b>Title:</b> {{ obj.title }}</p>
+				<p class="field"><b>Source:</b> {{ obj.source }}</p>
+			{% endblock %}
+			
+			{% block secondaryfields %}{% endblock %}
+			
+			<div class="buttons">
+				<p>
+					<a href="{{ obj|adminurl }}/{{ obj.identifier }}/"
+						class="button-link">Edit this {{ controller.name }}</a>
+					<a href="{{ obj|adminurl }}/{{ obj.identifier }}/delete/"
+						class="button-link">Delete this {{ controller.name }}</a>
+				</p>	
+			</div>
+		{% endif %}
+{% endblock %}
+

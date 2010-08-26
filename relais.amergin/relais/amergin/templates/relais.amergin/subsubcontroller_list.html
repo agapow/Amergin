@@ -1,0 +1,21 @@
+{% extends "relais.amergin/base.html" %}
+
+
+{% block mainbody %}
+	{% for k, v in controller.subcontrollers.items %}
+		<h3><a href="{{ v.url }}/">{{ v.title }}</a></h3>
+		
+		<p class="description">{{ v.description }}</p>
+
+		<ul id="id">
+		{% for u, sc in v.subcontrollers.items %}
+			<li>
+				<a href="{{ v.url }}/{{ u }}/">{{ sc.title|title }}</a>
+				{% if sc.description %}
+					- <span class="description">{{ sc.description }}</span>
+				{% endif %}
+			</li>
+		{% endfor %}
+		</ul>	
+	{% endfor %}
+{% endblock %}

@@ -13,34 +13,54 @@ __docformat__ = 'restructuredtext en'
 from django.conf.urls.defaults import *
 from django.http import HttpResponsePermanentRedirect
 
-import models
-from relais.amergin.controllers.registry import registry as controller_registry
-from relais.amergin.tools.registry import registry as tool_registry
-from relais.amergin.controllers.welcomecontroller import WelcomeController
-from relais.amergin.controllers.modelcontroller import ModelController
+from relais.amergin.controllers.restcontroller import RestController
+from relais.amergin.controllers.basecontroller import BaseController
+from relais.amergin.controllers.loadseqstool import LoadSeqsTool
 
+from relais.amergin.dev import *
 import config
+import models
 
 
 ### CONSTANTS & DEFINES ###
 
-model_controllers = [
-	ModelController (models.Bioseq),
-]
-
-controller_tree = WelcomeController (
-	subcontrollers = dict ([(m.url, m) for m in model_controllers])
+browse_controller = BaseController (
+	identifier="browse",
+	title="Browse data",
+	description="Search, view and edit records.",
+	template="relais.amergin/subcontroller_list.html",
+	subcontrollers={
+		'biosequences': RestController (models.Bioseq,
+			template="relais.amergin/biosequences_index.html",
+		),
+		'bioseqcollections': RestController (models.BioseqCollection,
+			template="relais.amergin/bioseqcollections_index.html",
+		),
+	}
 )
  
+tools_controller = BaseController (
+	identifier="tools",
+	description="Forms and analyses for high-level manipulation of data.",
+	template="relais.amergin/subcontroller_list.html",
+	subcontrollers={
+		'loadseqs': LoadSeqsTool(),	
+	}
+)
 
-urlpatterns = controller_tree.patterns()
-#
-#   (r'^foo$', include (controller_tree.patterns())),
-#
-#	# redirect "browse" and "tools" directory to welcome page
-#	#(r'^browse$', lambda request: HttpResponsePermanentRedirect(r'/')),
-#	#(r'^tools$', lambda request: HttpResponsePermanentRedirect(r'/')),
-#)
+controller_tree = BaseController (
+	identifier='welcome',
+	title='Welcome to Amergin',
+	template='relais.amergin/subsubcontroller_list.html',
+	subcontrollers={
+		browse_controller.url: browse_controller,
+		tools_controller.url: tools_controller,
+	}
+)
+
+urlpatterns = controller_tree.urlpatterns
+
+pp (urlpatterns)
 
 
 ### IMPLEMENTATION ###	

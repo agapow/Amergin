@@ -48,17 +48,46 @@ h1, h2, h3, h4, h5, h6 {
 	font-style: italic;
 }
 
-.note {
-	
+
+.flash {
+	width: 80%;
+	margin: 5px auto;
+	background-repeat: no-repeat;
+	background-position: 8px center;
+	padding: 5px 10px 10px 48px;
+	border: 1px solid;
+	min-height: 48px;
 }
 
-.warning {
-	
+.flash.notice, .flash.info, .flash.success {
+	background: #DFF2BF;
+	color:  #4F8A10;
+	background-image: url(/media/relais.amergin/img/icons/32/comment.png);
+	border-color: #4F8A10;
+	/* need to set these in each declaration */
+	background-repeat: no-repeat;
+	background-position: 8px center;
 }
 
-.error {
-	
+.flash.warning {
+	background: palegoldenrod;
+	background-image: url(/media/relais.amergin/img/icons/32/comment.png);
+	border-color: darkorange;
+	/* need to set these in each declaration */
+	background-repeat: no-repeat;
+	background-position: 8px center;
 }
+
+.flash.error {
+	background: lightcoral;
+	color: white;
+	background-image: url(/media/relais.amergin/img/icons/32/error.png);
+	border-color: firebrick;
+	/* need to set these in each declaration */
+	background-repeat: no-repeat;
+	background-position: 8px center;
+}
+
 
 #north {
 /*	background: transparent url('/media/relais.amergin/img/home.png')
@@ -93,6 +122,8 @@ label {
 
 .uniform fieldset {
 	border: 1px solid #bbb !important;
+	margin: 5px 0px !important;
+	padding: 5px;
 }
 
 legend {
@@ -107,10 +138,59 @@ legend {
 
 #record_table td, #record_table th {
 	border:1px solid #ccc;
-	border-collapse: collapse;
+	border-collapse: separate;
 	padding:5px;
 }
-		  
+
+table.record_list {
+	border: 1px solid brown !important;
+}
+
+table.record_list thead {
+	color: white !important;
+	background-color: brown !important;
+	font-weight: bold;
+	border-color: brown !important;
+}
+
+thead th {
+	background: brown none no-repeat;
+	color: white;
+}
+
+table.record_list td {
+	border-width: 0 !important;
+}
+tr.odd {
+	background-color: white;
+}
+
+tr.even {
+	background-color: lightcyan;
+}
+
+
+/*** BUTTONS & FORMS ***/
+
+div.buttons {
+	margin: 15px 0px;
+}
+
+a.button-link {
+	background-color: brown;
+	color: white;
+	padding: 2px 4px;
+}
+
+a.button-link:hover {
+	background-color: black;
+}
+
+.backto {
+	font-size: 90%;
+	margin: 5px 0px 10px;
+}
+
 /*** SOUTH-FOOTER ELEMENTS */
 .footer {
 	text-align: center;
@@ -126,3 +206,35 @@ legend {
 	text-align: center;
 }
 
+
+.sequence_layout {
+	border: thin solid gray;
+	margin: 1em 0em;
+	border: 1px solid slateGray;
+	color: slateGray;
+}
+
+/*
+We choose scalable fonts available on most computers. Note that as most browsers
+have a small size for monospace, the size is boosted slightly.
+*/
+.sequence_layout td {
+	font-size: 110%;
+	font-family: "Courier New", "Lucida Console", "Andale Mono",
+	"Lucida Sans Typewriter", "Bitstream Vera Sans Mono", Tahoma, monospace;
+	padding: 0px 3px;
+}
+
+.sequence_layout td.sequence {
+	background-color: cornsilk;
+	color: slategray;
+}
+
+.sequence_layout pre {
+	margin: 0;
+	padding: 3px;
+}
+
+.sequence_layout td.line_numbers {
+	background-color: #ECECEC;
+}

@@ -1,0 +1,13 @@
+{% extends "relais.amergin/rest_show.html" %}
+{% load formatseq %}
+
+
+{% block secondaryfields %}
+	<p class="field"><b>Members:</b></p>
+	<ul>
+		{% for mem in obj.members.all %}
+			<li><a href="../biosequences/{{ mem.identifier }}">{{ mem.name }}</a></li>
+		{% endfor %}
+	</ul>
+
+{% endblock %}

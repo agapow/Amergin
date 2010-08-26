@@ -1,0 +1,9 @@
+{% extends "relais.amergin/rest.html" %}
+
+{% block more_column_headers %}
+	<th>Size</th>
+{% endblock %}
+
+{% block more_column_data %}
+	<td>{{ obj.members|length }}</td>
+{% endblock %}

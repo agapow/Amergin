@@ -9,15 +9,18 @@ import relais.amergin.urls
 
 from django.conf import settings
 
+
 urlpatterns = patterns ('',
-	# capture admin requests
+	# capture admin requests at /admin & /admin/...
 	(r'^admin/', include(admin.site.urls)),
-	# place amergin app at '/amergin' and redir head of site to there
+	('^admin$', lambda request: HttpResponsePermanentRedirect (r'/admin/')),
+	# capture amergin requests at site root, /amergin and /amergin/...
+	(r'^$', lambda request: HttpResponsePermanentRedirect(r'/amergin/')),
 	(r'^amergin/', include(relais.amergin.urls)),
-	# redir front page to amergin
-	(r'^$', lambda request: HttpResponsePermanentRedirect('/amergin')),
+	('^amergin$', lambda request: HttpResponsePermanentRedirect (r'/amergin/')),
+	
 	# serve media
-	# TODO: is this necessary?
+	# NOTE: works
 	(r'^media/(?P<path>.*)$', 'django.views.static.serve',
 		{'document_root': settings.STATIC_DOC_ROOT, 'show_indexes': True}),
 )
