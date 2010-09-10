@@ -4,14 +4,18 @@
 {% block backto %}<a href="..">Back to tools</a>{% endblock %}
 
 {% block mainbody %}
-	{% uni_form form helper %}
+	<div class="toolform">
+		{% uni_form form helper %}
+	</div>
 
 	{% if results %}
 		<div class="results">
 			<h2>Results</h2>
 			{% block results %}
 				{% for res in results %}
-					{{ res }}
+					{% block result_row %}
+						{{ res }}
+					{% endblock %}
 				{% endfor %}
 			{% endblock %}
 		</div>

@@ -9,6 +9,7 @@ An base class for model controllers with a rest interface
 
 from django.conf.urls.defaults import *
 from django.shortcuts import get_object_or_404, render_to_response
+from django.template import RequestContext
 
 from modelcontroller import ModelController
 from relais.amergin.dev import *
@@ -81,7 +82,7 @@ class RestController (ModelController):
 		})
 		pp (self.template_show)
 		return render_to_response ([self.template_show, 'relais.amergin/rest_show.html'],
-			context)
+			context, context_instance=RequestContext(request))
 		
 	def delete (self, request, id):
 		pass

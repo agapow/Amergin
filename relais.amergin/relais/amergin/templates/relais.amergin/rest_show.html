@@ -21,14 +21,17 @@
 			
 			{% block secondaryfields %}{% endblock %}
 			
-			<div class="buttons">
-				<p>
-					<a href="{{ obj|adminurl }}/{{ obj.identifier }}/"
-						class="button-link">Edit this {{ controller.name }}</a>
-					<a href="{{ obj|adminurl }}/{{ obj.identifier }}/delete/"
-						class="button-link">Delete this {{ controller.name }}</a>
-				</p>	
-			</div>
+			{% if user.is_staff %}
+				<div class="buttons">
+					<p>
+						<a href="{{ obj|admin_edit_url }}"
+							class="button-link">Edit this {{ controller.name }}</a>
+						<a href="{{ obj|admin_delete_url }}"
+							class="button-link">Delete this {{ controller.name }}</a>
+					</p>	
+				</div>
+			{% endif %}
+			
 		{% endif %}
 {% endblock %}
 

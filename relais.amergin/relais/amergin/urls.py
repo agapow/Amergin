@@ -60,8 +60,6 @@ controller_tree = BaseController (
 
 urlpatterns = controller_tree.urlpatterns
 
-pp (urlpatterns)
-
 
 ### IMPLEMENTATION ###	
 	

@@ -80,7 +80,6 @@ class SecondaryObjectAdminForm (forms.ModelForm):
 	
 	def clean_identifier (self):
 		raw_id = self.cleaned_data['identifier']
-		print raw_id
 		return raw_id or raw_id.strip() or self.__class__.Meta.model.generate_uid()
 
 

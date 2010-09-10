@@ -90,7 +90,7 @@ class LoadSeqsTool (BaseTool):
 			if data[u'use_ann_reader']:
 				reader_cls = AnnotatedSeqReader
 			else:
-				reader_cls = SeqRecReader
+				reader_cls = SeqrecReader
 			reader = reader_cls (upfile, format)
 			
 			# read it! we have to do a fugly seqrec -> relais bseqs -> amergin bseqs
@@ -179,7 +179,7 @@ class LoadSeqsTool (BaseTool):
 		make_collection = forms.BooleanField(
 			label="Make collection",
 			help_text="""Form a collection from the contents of this upload. The
-				collection will """,
+				collection will have the details given below.""",
 			initial=False,
 			required=False,
 		)

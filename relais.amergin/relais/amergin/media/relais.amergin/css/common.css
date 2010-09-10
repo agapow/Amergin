@@ -126,9 +126,25 @@ label {
 	padding: 5px;
 }
 
-legend {
-	margin-left: 5px  !important;
+
+
+.uniForm fieldset{
+	padding: 10px 0;
 }
+
+.uniForm .ctrlHolder {
+	padding: 6px 0;
+}
+
+.uniForm .resetButton {
+	border-top-color: #DDD;
+	border-right-color: #AAA;
+	border-bottom-color: #AAA;
+	border-left-color: #DDD;
+	border-width: 1px;
+	padding: 3px 5px;
+}
+
 
 /*** RECORDS & BROWSING */
 #record_table {
@@ -189,6 +205,10 @@ a.button-link:hover {
 .backto {
 	font-size: 90%;
 	margin: 5px 0px 10px;
+}
+
+div.toolform {
+	margin: 0 10%;
 }
 
 /*** SOUTH-FOOTER ELEMENTS */

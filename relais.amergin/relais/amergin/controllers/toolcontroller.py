@@ -12,6 +12,7 @@ from django import forms
 from django.conf import settings
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
+from django.template import RequestContext
 
 from uni_form.helpers import FormHelper, Submit, Reset
 from uni_form.helpers import Layout, Fieldset, Column
@@ -49,8 +50,10 @@ class ToolController (BaseController):
 		)
 
 	def process_form (self, data):
+		# NOTE: must override this in derived class
 		## Preconditions & preparation:
-		msgs = results = []
+		msgs = []
+		results = []
 		## Main:
 		
 		## Postconditions & returns
@@ -70,11 +73,10 @@ class ToolController (BaseController):
 			# if the form is valid
 			if form.is_valid():
 				# get the clean data and do the work
-				print request
-				msgs = self.process_form (form.cleaned_data)
+				msgs, results = self.process_form (form.cleaned_data)
 			else:
-				msgs = (
-					messages.Error ('there was problem processing the form'),
+				msgs, results = (
+					messages.Error ('there was a problem processing the form'),
 				)
 		else:
 			# if you're coming to the form anew, make an unbound form
@@ -115,8 +117,10 @@ class ToolController (BaseController):
 			'msgs': msgs,
 			'helper': helper,
 		})
-		return render_to_response ('relais.amergin/tool.html', context)
+		return render_to_response ('relais.amergin/tool.html', context,
+			context_instance=RequestContext(request))
 	
+	# NOTE: must override this in derived class
 	class ToolForm (forms.Form):
 		username = forms.CharField(max_length=100)
 		email = forms.EmailField()

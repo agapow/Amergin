@@ -55,11 +55,13 @@
 		{% endif %}
 	{% endblock %}
 
-	<div class="buttons">
-		<p>
-			<a href="{{ controller.model|adminurl }}/add/"
-				class="button-link">Create a new {{ controller.name }}</a>
-		</p>	
-	</div>
-
+	{% if user.is_staff %}
+		<div class="buttons">
+			<p>
+				<a href="{{ controller.model|admin_create_url }}"
+					class="button-link">Create a new {{ controller.name }}</a>
+			</p>	
+		</div>
+	{% endif %}
+			
 {% endblock %}

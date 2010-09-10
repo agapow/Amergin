@@ -67,6 +67,7 @@ class ModelController (BaseController):
 		dct.update ({
 			'obj_cnt': query_set.count(),			
 		})
+		# include RequestConext by default
 		return list_detail.object_list (
 			request,
 			queryset = self.model.objects.all(),

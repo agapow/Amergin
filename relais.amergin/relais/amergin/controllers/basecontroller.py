@@ -12,6 +12,7 @@ import re
 from django.conf.urls.defaults import *
 from django.shortcuts import get_object_or_404, render_to_response
 from django.http import HttpResponsePermanentRedirect
+from django.template import RequestContext
 
 from relais.amergin.utils import first_not_none
 
@@ -83,7 +84,7 @@ class BaseController(object):
 		Given a request and mapping of variables, render and return appropriately.
 		"""
 		return render_to_response ([self.template, self.fallback_template],
-			dct)		
+			dct, context_instance=RequestContext(request))		
 		
 	def context (self):
 		"""Return values to be included in template."""	

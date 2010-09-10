@@ -18,6 +18,8 @@ from django.shortcuts import render_to_response
 from uni_form.helpers import FormHelper, Submit, Reset
 from uni_form.helpers import Layout, Fieldset, Column
 
+from relais.amergin import messages
+
 __all__ = [
 ]
 
@@ -68,12 +70,9 @@ class BaseTool (object):
 			# if the form is valid
 			if form.is_valid():
 				# get the clean data and do the work
-				print request
-				msgs = cls.process_form (form.cleaned_data)
+				msgs, results = cls.process_form (form.cleaned_data)
 			else:
-				msgs = (
-					('error', 'there was problem processing the form'),
-				)
+				msgs = [messages.Error ("there was problem processing the form")]
 		else:
 			# if you're coming to the form anew, make an unbound form
 			form = form_cls()
@@ -92,12 +91,11 @@ class BaseTool (object):
 					# if just a naked field name
 					field_pair = ['', field_pair]
 				sets.append (Fieldset (*field_pair))
-			helper.add_layout (Layout(*sets))
-					
+			helper.add_layout (Layout (*sets))
 
 		# add in submit actions and a reset button
 		for button in cls.actions:
-			submit = Submit (button[0], button[1])
+			submit = Submit (button[0], button[1].title())
 			helper.add_input (submit)
 		reset = Reset ('reset','Reset form')
 		helper.add_input (reset)
