@@ -122,17 +122,18 @@ class LoadSeqsTool (ToolController):
 				format = guess_format(upfile.name)
 				if not format:
 					raise exceptions.ValueError ("can't guess format from file name")
+			# TODO: because SeqrecReader isn't iterable
 			if data[u'use_ann_reader']:
-				reader_cls = AnnotatedSeqReader
+				reader = AnnotatedSeqReader (upfile, format)
 			else:
-				reader_cls = SeqrecReader
-			reader = reader_cls (upfile, format)
+				reader = SeqrecReader (upfile, format).read()
+			#reader = reader_cls (upfile, format)
 			
 			# read it! we have to do a fugly seqrec -> relais bseqs -> amergin bseqs
 			if data['extra_ann']:
 				ann_key, ann_val = [x.strip() for x in data['annotation'].split(':', 1)]
 			inseqs = []
-			for seqrec in reader.read():
+			for seqrec in reader:
 				pp (seqrec)
 				if data['bseq_src']:
 					seqrec.source = data['source']
