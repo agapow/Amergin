@@ -63,15 +63,26 @@ def relaisbioseq_to_djbioseq (am):
 	"""
 	Create a Django biosequence from an Amergin one
 	"""
+	# TODO: needs to translate qualifiers
 	dj = models.Bioseq()
-	pp (dj)
-	pp (am)
 	dj.identifier = am.identifier
 	dj.title = am.title
 	dj.description = am.description
 	dj.source = am.source
 	dj.seqtype = am.seqtype
 	dj.seqdata = am.seqdata
+	for a in am.annotations:
+		new_ann = models.BioseqAnnotation()
+		new_ann.name = a.name
+		new_ann.value = a.value
+		new_ann.identifier = models.BioseqAnnotation.generate_uid()
+		dj.annotations.add (new_ann)
+	for f in am.features:
+		new_feat = models.BioseqFeature()
+		new_feat.type = f.type
+		new_feat.location = f.seqlocation
+		new_feat.identifier = models.BioseqFeature.generate_uid()
+		dj.features.add (new_feat)
 	return dj
 	
 
@@ -134,7 +145,6 @@ class LoadSeqsTool (ToolController):
 				ann_key, ann_val = [x.strip() for x in data['annotation'].split(':', 1)]
 			inseqs = []
 			for seqrec in reader:
-				pp (seqrec)
 				if data['bseq_src']:
 					seqrec.source = data['source']
 				if data['bseq_desc']:
@@ -142,11 +152,13 @@ class LoadSeqsTool (ToolController):
 				if data['extra_ann']:
 					seqrec.annotations[ann_key.lowercase()] = ann_val
 				bioseq = seqrec_to_relaisbioseq (seqrec)
-				pp (bioseq)
 				inseqs.append (bioseq)
 				
 			# load seqs and make collection
 			dj_bseqs = [relaisbioseq_to_djbioseq (x) for x in inseqs]
+			print ("djseq\n")
+			pp (dj_bseqs[0].annotations.count())
+			pp (dj_bseqs[0].features.count())
 			if data['overwrite_bseqs']:
 				seqs_to_write = dj_bseqs
 				unwritten_seqs = None
@@ -159,11 +171,6 @@ class LoadSeqsTool (ToolController):
 						unwritten_seqs.append (s.identifier)
 					except:
 						seqs_to_write.append (s)
-				
-			#make_collection
-			#collection_title
-			#collection_desc
-			#collection_src
 			
 			if unwritten_seqs:
 				msgs.append (messages.Info ("""The following sequences already
@@ -174,6 +181,22 @@ class LoadSeqsTool (ToolController):
 					s.save()
 				msgs.append (messages.Success ("%s sequences were uploaded." %
 					len (seqs_to_write)))
+				if data['make_collection']:
+					new_coll = models.BioseqCollection()
+					if data['collection_title']:
+						new_coll.title = data['collection_title']
+					if data['collection_desc']:
+						new_coll.description = data['collection_desc']
+					if data['collection_src']:
+						new_coll.source = data['collection_src']
+					new_coll.identifier = models.BioseqCollection.generate_uid()
+					new_coll.save()
+					for s in seqs_to_write:
+						membership = models.BioseqCollectionMembership()
+						membership.collection = new_coll
+						membership.biosequence = s
+						membership.save()
+
 			else:
 				msgs.append (messages.Error ("No sequences were uploaded."))
 				

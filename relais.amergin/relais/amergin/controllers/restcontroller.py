@@ -55,8 +55,6 @@ class RestController (ModelController):
 			url ('^$', self.view, name=self.identifier),
 		]
 		## Return:
-		pp ("I'm here")
-		pp (patts)
 		return patterns ('', *patts)
 	
 	urlpatterns = property (patterns)
@@ -80,7 +78,6 @@ class RestController (ModelController):
 			'obj': obj,
 			'description': None,
 		})
-		pp (self.template_show)
 		return render_to_response ([self.template_show, 'relais.amergin/rest_show.html'],
 			context, context_instance=RequestContext(request))
 		
